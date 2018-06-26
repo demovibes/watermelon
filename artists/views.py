@@ -3,17 +3,19 @@ from django.http import JsonResponse
 from .models import Artist
 
 def index(request):
-    artist_list = Artist.objects.order_by('name','real_name')
+    return JsonResponse(
+        list(Artist.objects.values('id','name','real_name','country_code')),
+        safe=False)
 
-    # put all artist data into a list of dictionary items
-    artist_response = [
-    {
-      'name': a.name,
-      'real_name': a.real_name,
-
-      'country_code': a.country_code,
-
-      'bio': a.bio,
-    } for a in artist_list ]
-
-    return JsonResponse(artist_response, safe=False)
+# Specific page of an artist
+def detail(request, artist_id):
+    obj = Artist.objects.get(pk=artist_id)
+    return JsonResponse(
+        {
+            'id': obj.id,
+            'name': obj.name,
+            'real_name': obj.real_name,
+            'country_code': obj.country_code,
+            'bio': obj.bio,
+        },
+        safe=False)
