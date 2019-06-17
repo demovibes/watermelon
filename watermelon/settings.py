@@ -31,9 +31,10 @@ ALLOWED_HOSTS = [ '*' ]
 # Application definition
 
 INSTALLED_APPS = [
-    'streams.apps.StreamsConfig',
-    'artists.apps.ArtistsConfig',
-    'songs.apps.SongsConfig',
+    'watermelon.apps.streams',
+    'watermelon.apps.artists',
+    'watermelon.apps.songs',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,17 +78,9 @@ WSGI_APPLICATION = 'watermelon.wsgi.application'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
-    'sqlite3': {
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    },
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql', 
-        'NAME': 'watermelon',
-        'USER': 'wm_user',
-        'PASSWORD': 'wm_password',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-        'PORT': '',
     }
 }
 
