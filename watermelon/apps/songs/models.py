@@ -11,10 +11,10 @@ class Platform(models.Model):
 class Song(models.Model):
     name = models.CharField(max_length=200, db_index=True)
 
-    platform = models.ForeignKey(Platform)
+    platform = models.ForeignKey(Platform, on_delete=models.PROTECT)
 
     # using quotes to refer to Artist class from another app
-    artist = models.ForeignKey('artists.Artist')
+    artist = models.ForeignKey('artists.Artist', on_delete=models.PROTECT)
 
     # The uploaded file.
     file = models.FileField(upload_to='uploads/%Y/%m/%d/')
