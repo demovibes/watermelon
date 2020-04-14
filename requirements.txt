@@ -1,0 +1,6 @@
+# Django base
+Django
+# REST API support
+djangorestframework
+# Template engine
+Jinja2
