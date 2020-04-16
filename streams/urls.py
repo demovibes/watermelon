@@ -1,7 +1,6 @@
-from django.conf.urls import url
-
-from . import views
+from django.urls import path
+from .views import StreamsListView
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    path('', StreamsListView.as_view()),
 ]
