@@ -32,10 +32,10 @@ ALLOWED_HOSTS = [ '*' ]
 # Application definition
 
 INSTALLED_APPS = [
-    'demovibes.apps.streams',
-    'demovibes.apps.artists',
-    'demovibes.apps.songs',
-    'demovibes.apps.user_profiles',
+    'streams.apps.StreamsConfig',
+    'artists.apps.ArtistsConfig',
+    'songs.apps.SongsConfig',
+    #'user_profiles.apps.UserProfilesConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',

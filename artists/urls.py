@@ -1,8 +1,7 @@
-from django.conf.urls import url
-
-from . import views
+from django.urls import path
+from .views import ArtistsDetailView, ArtistsListView
 
 urlpatterns = [
-    url(r'^(?P<artist_id>[0-9]+)$', views.detail, name='artists-detail'),
-    url(r'^$', views.index, name='index'),
+    path('', ArtistsListView.as_view()),
+    path('<int:pk>', ArtistsDetailView.as_view()),
 ]
