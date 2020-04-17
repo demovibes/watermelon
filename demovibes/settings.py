@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'streams.apps.StreamsConfig',
     'artists.apps.ArtistsConfig',
     'songs.apps.SongsConfig',
-    #'user_profiles.apps.UserProfilesConfig',
+    'user_profiles.apps.UserProfilesConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',

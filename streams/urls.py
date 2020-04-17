@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import StreamsListView
+from .views import StreamListView
 
 urlpatterns = [
-    path('', StreamsListView.as_view()),
+    path('', StreamListView.as_view()),
 ]
