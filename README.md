@@ -31,11 +31,19 @@ greater.  Older versions will need to use `virtualenv` instead of `venv`.
   folder:
   `pip install -r requirements.txt`
 
-4. Set up an Admin user.  If this is your first time launching watermelon, you
+4. Set up the initial (empty) database.  Eventually, watermelon will ship with
+  "migrations" that allow upgrade from version to version.  Because this is
+  early development, migrations are not being added to version control.  You
+  will need to create and apply the initial migrations from scratch:
+  `python manage.py makemigrations` and then `python manage.py migrate` will
+  create the skeleton for your new DB.
+
+5. Set up an Admin user.  If this is your first time launching watermelon, you
   need an admin user with the power to create other objects.  Run this:
   `python manage.py createsuperuser`
 
-5. Launch the development server.  From the root folder, run this command:
+6. Launch the development server.  From the root folder, run this command:
   `python manage.py runserver`
   This will start a local webserver for testing watermelon, running at
-  http://127.0.0.1:8000/
+  http://127.0.0.1:8000/.  (To run an server that can be accessed externally,
+  add an IP and port, as in `python manage.py runserver 0:8000`)
