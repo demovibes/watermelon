@@ -32,6 +32,8 @@ ALLOWED_HOSTS = [ '*' ]
 # Application definition
 
 INSTALLED_APPS = [
+    'backend.apps.BackendConfig',
+
     'streams.apps.StreamsConfig',
     'artists.apps.ArtistsConfig',
     'songs.apps.SongsConfig',

@@ -1,4 +1,6 @@
 # Django base
 Django
+# Image operations
+Pillow
 # REST API support
 djangorestframework
