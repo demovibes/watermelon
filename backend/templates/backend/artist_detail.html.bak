@@ -1,0 +1,62 @@
+{% extends 'base/base.html' %}
+{% load admin_urls %}
+
+{% block content %}
+<div id="main-header">
+  <img class="icon_header" src="{{ MEDIA_URL }}user_green.png" alt="" /><span class="header">Artist Info{% if user.is_staff %} [<a href="{% url opts|admin_urlname:'change' artist.pk %}/">Edit Artist Info</a>]{% endif %}
+</div>
+<div id="artist_details">
+  <div id="artist-image">
+    {% if object.artist_pic %}<img class="artist_logo" src="{{ object.artist_pic.url }}" title="{{ object.handle }}'s Picture" />{% else %}<img class="artist_logo" src="{{ MEDIA_URL }}no_artist_pic.png" alt="No Picture" />{% endif %}
+  </div>
+  <div id="artist_information">
+    <dt>Artist Name</dt><dd>{{ object.name }}</dd>
+{% if object.link_to_user %}
+    <dt>Artist's User Page</dt><dd><a href="/user/{{ object.link_to_user.username }}/">View Artist's User Page</a><br /></dd>
+{% endif %}
+{% if object.alias_of %}
+    <dt>Alias of</dt><dd>{% with object.alias_of as A%}{% include "webview/t/artist.html" %}{% endwith %}</dd>
+{% endif %}
+
+{% if object.aliases.all %}
+    <dt>Other aliases</dt><dd>{% for alias  in object.aliases.all %}<a href="{{ alias.get_absolute_url }}">{{ alias }}</a>{% if forloop.last %}{% else %}, {% endif %}{% endfor %}<br />
+{% endif %}
+
+{% if object.real_name %}
+   <dt>Real Name</dt><dd>{{ object.name }}</dd>
+{% endif %}
+
+{% if object.real_name %}
+   <dt>Real Name</dt><dd>{{ object.name }}</dd>
+{% endif %}
+  </div>
+  <div id="artist-biography">
+{% if object.info %}
+
+<br />Additional Information:<br />
+
+<p><i>{{ object.info|urlize|linebreaks }}</i></p>
+{% endif %}<br />
+{% comment %}
+{% ifequal object.status "A" %}
+ <a href="{{ object.get_absolute_url }}upload/">Upload a new song by this artist</a><br />
+{% else %}
+ <strong>Artist Locked For Uploading!</strong><br />
+{% endifequal %}
+<br />
+{% if object.last_updated %}Last Updated: {{ object.last_updated|date:"F j, Y" }}<br />{% endif %}
+{% if object.created_by %}Added By: {% with object.created_by as U %}{% include "webview/t/user.html" %}{% endwith %}<br />{% endif %}
+</td>
+</tr>
+</table>
+
+<h2><img class="icon_header" src="{{ MEDIA_URL }}music.png" alt="" />Songs Connected To This Artist</h2>
+{% include "webview/t/songheader.html" %}
+{% for song in object.song_set.all %}
+<tr class="{% cycle 'row1' 'row2' %}">
+% include "webview/t/songlist.html" %
+</tr>
+{% endfor %}
+{% endcomment %}
+</table>
+{% endblock %}

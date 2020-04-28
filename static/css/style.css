@@ -1,0 +1,37 @@
+html {
+  background: Orange
+}
+
+body {
+  background: White;
+  max-width: 100vh;
+
+  margin: 1rem auto;
+  border: 1px solid black;
+  padding: 1rem
+}
+
+div#header, div#footer, .center {
+  text-align: center
+}
+
+div#left-sidebar {
+  float: left
+}
+
+div#content {
+  display: inline-block
+}
+
+div#right-sidebar {
+  float: right
+}
+
+div.column {
+  background: White;
+  max-width: 100vh;
+
+  margin: 1rem auto;
+  border: 1px solid black;
+  padding: 1rem
+}
