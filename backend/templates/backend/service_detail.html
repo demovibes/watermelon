@@ -1,0 +1,28 @@
+{% extends 'base/base.html' %}
+{% load admin_urls %}
+{% debug %}
+{% block content %}
+<h2>{{ object.name }} Service Status</h2>
+<a href="{% url 'service-list-view' %}">View all Services</a>
+{% comment %}<a href="{% url opts|admin_urlname:'change' object.pk %}">Edit Service Info</a>{% endcomment %}
+<hr>
+<dd>Service Name</dd><dt>{{ object.name }}</dt>
+<dd>Service Description</dd><dt>{{ object.description }}</dt>
+<dd>Service Status Code</dd><dt>{{ object.status_code }}</dt>
+<dd>Service Status Message</dd><dt>{{ object.status_message }}</dt>
+<hr>
+<form action="{% url 'service-detail-view' object.pk %}" method="post">
+{% csrf_token %}
+<input type="submit" name="command_start" value="Start Service">
+<input type="submit" name="command_stop" value="Stop Service">
+</form>
+{% for file in object.file_list %}
+<hr>
+<form action="{% url 'service-post-file' object.pk %}" method="post">
+{% csrf_token %}
+<label for="content">{{ file.name }} ({{ file.path }})</label>
+<br><textarea name="content"{% if file.readonly %} readonly{% endif %}>{{ file.content }}</textarea>
+<br><input type="submit" value="Save">
+</form>
+{% endfor %}
+{% endblock %}

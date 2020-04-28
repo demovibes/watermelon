@@ -46,4 +46,6 @@ greater.  Older versions will need to use `virtualenv` instead of `venv`.
   `python manage.py runserver`
   This will start a local webserver for testing watermelon, running at
   http://127.0.0.1:8000/.  (To run an server that can be accessed externally,
-  add an IP and port, as in `python manage.py runserver 0:8000`)
+  add an IP and port, as in `python manage.py runserver 0:8080`)
+  Note that the Icecast default port is 8000, so the dev server should be run
+  on a different port.
