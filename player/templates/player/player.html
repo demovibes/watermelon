@@ -1,0 +1,30 @@
+<h1>watermelon web player</h1>
+<h2>Connected to <span id="stream_url"></span></h2>
+<p>Format: <span id="stream_format"></span>
+<p>Bitrate: <span id="stream_bitrate"></span>
+<p>This stream is owned by <span id="stream_owner"></span> and broadcasts from <span id="stream_country_code"></span>.
+<p><audio id="stream" autoplay controls src="">Your browser does not appear to support &lt;audio&gt; tags.  Update your browser, or use an external program to play this stream.</audio>
+<hr>
+<p>Stream: <select id="stream_list" onchange="stream_change()">{% for object in object_list %}
+  <option value="{{ object.pk }}"{% if object.pk == object_selected %} selected{% endif %}>{{ object }}</option>
+{% endfor %}</select>
+<script>
+var streams = { {% for object in object_list %}
+  '{{ object.pk }}': { url: '{{ object.url }}', format: '{{ object.format }}', bitrate: {{ object.bitrate }}, owner: '{{ object.owner }}', country_code: '{{ object.country_code }}' },
+{% endfor %} }
+
+function stream_change() {
+  var selected = document.getElementById('stream_list').value
+  var stream = streams[selected]
+
+  document.getElementById('stream_format').innerText = stream.format
+  document.getElementById('stream_owner').innerText = stream.owner
+  document.getElementById('stream_bitrate').innerText = stream.bitrate
+  document.getElementById('stream_country_code').innerText = stream.country_code
+  document.getElementById('stream_url').innerText = stream.url
+
+  document.getElementById('stream').src = stream.url
+}
+
+stream_change()
+</script>

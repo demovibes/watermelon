@@ -16,15 +16,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from django.views.generic import TemplateView
+
 urlpatterns = [
     path('song/', include('songs.urls')),
     path('artist/', include('artists.urls')),
-    path('stream/', include('streams.urls')),
+
+    # player / streams app
+    path('', include('player.urls')),
 
     path('user/', include('user_profiles.urls')),
 
     path('backend/', include('backend.urls')),
-    path('auth/', include('django.contrib.auth.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 
     path('admin/', admin.site.urls),
+
+    path('', TemplateView.as_view(template_name="index.html")),
 ]

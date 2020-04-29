@@ -31,7 +31,7 @@ class Song(models.Model):
 
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse('song-detail-view', kwargs={'pk': self.id})
+        return reverse('song-detail-view', kwargs={'pk': self.pk})
 
     def __str__(self):
         return self.name

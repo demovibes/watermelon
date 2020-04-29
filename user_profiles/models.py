@@ -11,7 +11,7 @@ class Profile(models.Model):
 
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse('profile-detail-view', kwargs={'pk': self.id})
+        return reverse('profile-detail-view', kwargs={'pk': self.pk})
 
     def __str__(self):
         return '%s [%s]' % (self.user, self.location)
