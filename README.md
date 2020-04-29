@@ -49,3 +49,34 @@ greater.  Older versions will need to use `virtualenv` instead of `venv`.
   add an IP and port, as in `python manage.py runserver 0:8080`)
   Note that the Icecast default port is 8000, so the dev server should be run
   on a different port.
+
+## Setting up a Streamer
+Once you have watermelon up it is time to set up a streamer to actually play music.
+This example will use icecast + ices to run the backend.
+
+The general idea is:
+
+    django -----> DB
+      ^
+      |
+    link-ices.py -> ices -> icecast
+      |              ^
+      v              |
+     sox  -----------/
+
+icecast is the streaming server, which accepts a source input, and allows
+external clients to connect to it for broadcast listening.  ices is a "source"
+which can read .ogg files and forward them to icecast.
+
+Configure ices using a "playlist" source of type "script" and give it the path
+to `contrib/link-ices.py`.  Whenever ices is ready for another song, it will
+call the script, and expects to receive the name of a file to play.
+
+The magic of queue management then happens within `link-ices.py`, which is
+responsible for:
+* retrieving the next item from the playlist model,
+* calling SoX to convert to a .ogg file in a temp location,
+* writing the metadata info to the location expected by IceS, and
+* returning the temp filename to IceS for streaming.
+
+Look into the `playlist` app for more information on how the queue works.

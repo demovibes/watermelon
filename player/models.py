@@ -1,7 +1,7 @@
 from django.db import models
 
 class Stream(models.Model):
-    url = models.URLField(primary_key=True, max_length=200,
+    url = models.URLField(unique=True, max_length=200,
         help_text='URL of the stream')
 
     active = models.BooleanField(default=True, help_text='Designates whether this stream should be treated as active. Unselect this instead of deleting streams.')
@@ -21,7 +21,7 @@ class Stream(models.Model):
 
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse('streams-detail-view', kwargs={'pk': self.id})
+        return reverse('streams-detail-view', kwargs={'pk': self.pk})
 
     def __str__(self):
         return "%s [%s's %dkbps %s stream]" % (self.url, self.owner, self.bitrate, self.format)

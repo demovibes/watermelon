@@ -1,0 +1,21 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<h2>welcome to watermelon</h2>
+some links:
+<p><b><a href="{% url 'player-view' %}" target="_blank">listen now</a></b>
+<p><a href="{% url 'entry-list-view' %}">playlist</a>
+<hr>
+user mgmt:
+{% if user.is_authenticated %}
+<p>logged in as <b>{{ user.username }}</b> (<a href="{% url 'logout' %}">logout</a>)
+{% else %}
+<p>not logged in (<a href="{% url 'login' %}">login</a>)
+{% endif %}
+<ul>
+<li><a href="{% url 'artist-list-view' %}">artists</a></li>
+<li><a href="{% url 'song-list-view' %}">songs</a></li>
+<li><a href="{% url 'stream-list-view' %}">streams</a></li>
+<li><a href="{% url 'profile-list-view' %}">user-profiles</a></li>
+</ul>
+{% endblock %}

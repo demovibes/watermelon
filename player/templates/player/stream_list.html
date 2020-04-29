@@ -1,0 +1,21 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<h2>Nectarine Audio Streams</h2>
+<p>The following streams are currently active on the site. You can add the Direct Link's as a URL to a streaming program such as WinAmp or VLC. The M3U is a playlist file, which can be opened by WinAmp, iTunes, VLC and more!</p>
+<br />
+<table>
+<tr>
+  <th>Stream URL</th>
+  <th>Stream Description</th>
+  <th>Stream Detail</th>
+</tr>
+{% for object in object_list %}
+<tr>
+    <td>{{ object.url }}</td>
+    <td>{{ object.description }}</td>
+    <td><a href="{% url 'stream-detail-view' object.pk %}">Detail Page</a></td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}

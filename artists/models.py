@@ -37,7 +37,7 @@ class Artist(models.Model):
 
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse('artist-detail-view', kwargs={'pk': self.id})
+        return reverse('artist-detail-view', kwargs={'pk': self.pk})
 
     def __str__(self):
         return '%s (%s) [%s]' % (self.name, self.real_name, self.country_code)

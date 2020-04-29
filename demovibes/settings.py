@@ -36,10 +36,13 @@ INSTALLED_APPS = [
     'backend.apps.BackendConfig',
 
     # Site areas
-    'streams.apps.StreamsConfig',
+    'player.apps.PlayerConfig',
     'artists.apps.ArtistsConfig',
     'songs.apps.SongsConfig',
     'user_profiles.apps.UserProfilesConfig',
+
+    # Playlist (queue)
+    'playlist.apps.PlaylistConfig',
 
     # Admin panel, user auth, and dependencies
     'django.contrib.admin',
