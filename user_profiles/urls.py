@@ -1,7 +1,10 @@
-from django.urls import path
-from .views import ProfileListView, ProfileDetailView
+from django.urls import path, re_path
+from .views import ProfileList, ProfileDetail, ProfileUpdate
+
+app_name = 'user_profiles'
 
 urlpatterns = [
-    path('', ProfileListView.as_view(), name='profile-list-view'),
-    path('<str:pk>/', ProfileDetailView.as_view(), name='profile-detail-view'),
+    re_path(r'^(?P<slug>[\w.@+-]+)/update/$', ProfileUpdate.as_view(), name='profile-update'),
+    re_path(r'^(?P<slug>[\w.@+-]+)/$', ProfileDetail.as_view(), name='profile-detail'),
+    path('', ProfileList.as_view(), name='profile-list'),
 ]

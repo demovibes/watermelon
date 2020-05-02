@@ -1,4 +1,5 @@
 {% load static %}
+{% load tags_user_profiles %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -69,7 +70,7 @@
 <p>There SHOULD be an anonymized list of users here, if implemented.
 {% endif %}
           <h3>Our Newest User:</h3>
-          <span class="username"><img src='/static/flags/nectaflag.png' class='countryflag' alt='flag' title='nectaflag' /><a href="/demovibes/user/Blue_Blue_Christmas/" title="User" >Blue_Blue_Christmas</a></span>
+	  {% user 'DJRandom' %}
         </div>
 {% endblock %}
       </div>
@@ -90,7 +91,7 @@ user mgmt:
 <li><a href="{% url 'artists:artist-list' %}">artists</a></li>
 <li><a href="{% url 'song-list-view' %}">songs</a></li>
 <li><a href="{% url 'stream-list-view' %}">streams</a></li>
-<li><a href="{% url 'profile-list-view' %}">user-profiles</a></li>
+<li><a href="{% url 'user_profiles:profile-list' %}">user-profiles</a></li>
 </ul>
 {% endblock %}
       </div>

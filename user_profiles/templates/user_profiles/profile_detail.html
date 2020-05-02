@@ -1,5 +1,51 @@
 {% extends 'base/base.html' %}
+{% load l10n %}
 
 {% block content %}
-{{ object }}
+<h2>User Profile - {{ object.user.get_username }}</h2>
+  <div class="detail-image">
+{% if object.image %}
+   <img src="{{ object.image.url }}" title="[{{ object.user }}'s Image]" alt="[{{ object.user }}'s Image]" /><br />
+{% else %}
+   <i>No picture!</i>
+{% endif %}
+  </div>
+  <div class="detail-infobox">
+{% comment %}
+{% if object.user.artist %}
+ <a href="{{ object.user.artist.get_absolute_url }}">View User's Artist Page</a><br />
+{% endif %}
+{% endcomment %}
+    <dl>
+      <dt>Username</dt><dd><b>{{ object.user.get_username }}</b></dd>
+      {% if object.user.get_full_name %}<dt>Real Name</dt><dd>{{ object.user.get_full_name }}</dd>{% endif %}
+      {% if object.birth_date %}<dt>Birthdate</dt><dd>{{ object.birth_date|localize }}</dd>{% endif %}
+      {% if object.location %}<dt>Location</dt><dd>{{ object.location }}</dd>{% endif %}
+      <dt>Date Joined</dt><dd>{{ object.user.date_joined|localize }}</dd>
+      {% if object.user.last_login %}<dt>Last Login</dt><dd>{{ object.user.last_login|localize }}</dd>{% endif %}
+    </dl>
+  </div>
+
+{% if object.user == request.user %}<b><a href="{% url 'user_profiles:profile-update' object.user %}">Edit Profile</a></b>{% endif %}
+{% comment %}
+ {% if object.infoline %}<strong>{{ object.infoline }}</strong><br />{% else %}<em>[No Info Line]</em><br />{% endif %}
+{% endif %}
+{% endcomment %}
+
+{% comment %}
+<a href="{% url dv-send_pm %}?to={{ object.user }}"><img src="{{ MEDIA_URL }}email.png" alt="mail" /> Send A Message</a> | View {{ object.user }}'s <a href="{% url dv-user-favs object.user %}">Favourites List</a>.<br/>
+
+{% if object.hol_id %}
+ <a href="http://hol.abime.net/hol_search.php?N_ref_artist={{ object.hol_id }}" target="_blank">See User's H.O.L. Details</a><br />
+{% endif %}
+
+{% if object.fave_id %}
+ <font color="blue">{{ object.user }}'s <em>Ultimate</em> Song:</font> {% get_song_queuetag object.fave_id %}
+{% endif %}
+{% endcomment %}
+
+<h3>Public information</h3>
+<p>
+{{ object.bio }}
+</p>
 {% endblock %}
