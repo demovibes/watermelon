@@ -1,6 +1,8 @@
 # Django base
-Django
+Django>=2.2,<3.0
 # Image operations
-Pillow
+Pillow>=2
+# For admindocs
+docutils>=0.15
 # REST API support
-djangorestframework
+#djangorestframework

@@ -1,0 +1,17 @@
+<h3>Site Chat</h3>
+{% if user.is_authenticated %}
+  <form action="javascript:chat_post()" method="POST">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit">
+  </form>
+{% for message in messages %}
+          <p class="chat-message">
+            <span class="username">{{ message.user }}</span><span class="chat-message-time">{{ message.time }}</span>
+            <br>
+            <span class="chat-message-text">{{ message.text }}</span>
+          </p>
+{% endfor %}
+{% else %}
+          <b>You must be logged in to view site chat.</b>
+{% endif %}
