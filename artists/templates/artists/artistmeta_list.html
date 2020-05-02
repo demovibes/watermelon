@@ -1,0 +1,26 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<h2>Pending Artist List</h2>
+<p>The following artist metadata is in "pending" status and requires moderator review.</p>
+<br />
+<table>
+<tr>
+  <th>Artist ID</th>
+  <th>Artist Name</th>
+  <th>Submitted By</th>
+  <th>Date Submitted</th>
+  <th>Detail View</th>
+</tr>
+{% load tags_artists %}
+{% for object in object_list %}
+<tr>
+    <td>{{ object.artist_id }}</td>
+    <td>{% artist object.artist_id %}</td>
+    <td>{{ object.submitter }}</td>
+    <td>{{ object.time_create }}</td>
+    <td><a href="{% url 'artist-meta-detail' object.pk %}">Detail View</a></td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}

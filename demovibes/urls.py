@@ -1,7 +1,7 @@
 """demovibes URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.0/topics/http/urls/
+    https://docs.djangoproject.com/en/2.2/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -24,13 +24,17 @@ urlpatterns = [
 
     # player / streams app
     path('', include('player.urls')),
+    path('playlist/', include('playlist.urls')),
 
     path('user/', include('user_profiles.urls')),
+    path('chat/', include('chat.urls')),
 
     path('backend/', include('backend.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 
+    # admin documentation and main site
+    path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
 
-    path('', TemplateView.as_view(template_name="index.html")),
+    path('', TemplateView.as_view(template_name='base/base.html'), name='index'),
 ]

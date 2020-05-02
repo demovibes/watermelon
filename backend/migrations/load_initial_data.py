@@ -8,10 +8,10 @@ def forwards_func(apps, schema_editor):
     db_alias = schema_editor.connection.alias
     Service.objects.using(db_alias).bulk_create([
         Service(name='Icecast', description='Icecast Streamer',
-	    command_status='service icecast status',
-	    command_start='service icecast start',
-	    command_stop='service icecast stop',
-	),
+            command_status='service icecast status',
+            command_start='service icecast start',
+            command_stop='service icecast stop',
+        ),
     ])
 
 def reverse_func(apps, schema_editor):

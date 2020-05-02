@@ -13,14 +13,204 @@
     <div id="main">
       <div id="left-sidebar" class="column">
 {% block left-sidebar %}
+        <div id="sitemenu">
+          <h3>Welcome, {% if user.is_authenticated %}{{ user.get_username }}{% else %}visitor{% endif %}!</h3>
+          <ul class="menulist">
+            <li id="home"><a href="{% url 'index' %}">Home</a></li>
+<!--            <li id="forum"><a href="/forum/">Forum</a></li> -->
+            <li id="songs"><a href="{% url 'song-list-view' %}">Songs</a></li>
+<!--            <li id="song-source"><a href="/demovibes/sources/">Sources</a></li>
+            <li id="song-platform"><a href="/demovibes/platforms/">Platforms</a></li> -->
+            <li id="artists"><a href="{% url 'artists:artist-list' %}">Artists</a></li>
+<!--            <li id="groups"><a href="/demovibes/groups/">Groups</a></li>
+            <li id="labels"><a href="/demovibes/labels/">Labels</a></li>
+            <li id="compilations"><a href="/demovibes/compilations/">Compilations</a></li>
+            <li id="screenshots"><a href="/demovibes/screenshots/">Images</a></li>
+            <li id="licenses"><a href="/demovibes/licenses/">Licenses</a></li>
+            <li id="tagcloud"><a href="/demovibes/tags/">Tag cloud</a></li>
+        <li id="statistics"><a href="/demovibes/statistics/">Statistics</a></li> -->
+            <li>&nbsp;</li>
+            <li id="playlist"><a href="{% url 'entry-list-view' %}">Playlist</a></li>
+            <li>&nbsp;</li>
+<!--            <li id="search"><a href="/search/">Search</a></li>
+            <li id="recent"><a href="/demovibes/recent/">New Uploads</a></li>
+            <li id="recentchanges"><a href="/demovibes/updates/">Recent Updates</a></li>
+            <li>&nbsp;</li>
+            <li id="faq"><a href="/demovibes/faq/">FAQ</a></li>
+            <li id="links"><a href="/demovibes/links/">Links</a></li>
+            <li id="chat"><a href="/demovibes/chat/">Simple Chat</a></li> -->
+          </ul>
+        </div>
+        <div id="chatbox-small">
+          <h3>Site Chat</h3>
+{% if user.is_authenticated %}
+          <form action="javascript:chat_post()" method="POST">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit">
+          </form>
+{% for message in messages %}
+          <p class="chat-message">
+            <span class="username">{{ message.user }}</span><span class="chat-message-time">{{ message.time }}</span>
+            <br>
+            <span class="chat-message-text">{{ message.text }}</span>
+          </p>
+{% endfor %}
+{% else %}
+          <b>You must be logged in to view site chat.</b>
+{% endif %}
+        </div>
+        <div id="menuonline">
+          <h3>Who's Online?</h3>
+          There are a total of N users online now:
+{% if user.is_authenticated %}
+<p>There SHOULD be a list of users here, if implemented.
+{% else %}
+<p>There SHOULD be an anonymized list of users here, if implemented.
+{% endif %}
+          <h3>Our Newest User:</h3>
+          <span class="username"><img src='/static/flags/nectaflag.png' class='countryflag' alt='flag' title='nectaflag' /><a href="/demovibes/user/Blue_Blue_Christmas/" title="User" >Blue_Blue_Christmas</a></span>
+        </div>
 {% endblock %}
       </div>
       <div id="content" class="column">
 {% block content %}
+<h2>welcome to watermelon</h2>
+some links:
+<p><b><a href="{% url 'player-view' %}" target="_blank">listen now</a></b>
+<p><a href="{% url 'entry-list-view' %}">playlist</a>
+<hr>
+user mgmt:
+{% if user.is_authenticated %}
+<p>logged in as <b>{{ user.username }}</b> (<a href="{% url 'logout' %}">logout</a>)
+{% else %}
+<p>not logged in (<a href="{% url 'login' %}">login</a>)
+{% endif %}
+<ul>
+<li><a href="{% url 'artists:artist-list' %}">artists</a></li>
+<li><a href="{% url 'song-list-view' %}">songs</a></li>
+<li><a href="{% url 'stream-list-view' %}">streams</a></li>
+<li><a href="{% url 'profile-list-view' %}">user-profiles</a></li>
+</ul>
 {% endblock %}
       </div>
       <div id="right-sidebar" class="column">
 {% block right-sidebar %}
+        <div id="usermenu">
+        <h3>User Menu</h3>
+        <ul class="menulist">
+{% if user.is_authenticated %}
+          <li id="profile"><a href="/demovibes/user/">Edit My Profile</a></li>
+          <li id="favorites"><a href="/demovibes/favorites/">My Favourites</a></li>
+          <li id="inbox"><a href="/demovibes/inbox/">My Inbox</a></li>
+          <li id="logout"><a href="{% url 'logout' %}">Log Me Out</a></li>
+
+          <li id="admin"><a href="/admin" target="admin">Admin Area</a></li>
+          <li id="menuqueue"><a href="/demovibes/uploaded_songs/">Unapproved Uploads</a> </li>
+          <li id="menumute"><a href="/demovibes/oneliner/mute/">Mute account</a></li>
+
+
+          <li></li>
+
+          <li id="unap-artists"><a href="/demovibes/new_artists/">Pending Artists</a> </li>
+
+
+          <li id="unap-groups"><a href="/demovibes/new_groups/">Pending Groups</a> </li>
+
+
+          <li id="unap-compilations"><a href="/demovibes/new_compilations/">Pending Compilations</a> </li>
+
+
+          <li id="unap-labels"><a href="/demovibes/new_labels/">Pending Labels</a> </li>
+
+
+          <li id="unap-screenshots"><a href="/demovibes/new_screenshots/">Pending Screenshots</a> </li>
+
+
+          <li id="unap-links"><a href="/demovibes/link/pending/">Pending Links</a> </li>
+
+          <li id="unap-nju"><a href="/demovibes/newshit/">New info</a> </li>
+{% else %}
+          <li id="login"><a href="{% url 'login' %}">Log In / Register</a></li>
+{% endif %}
+        </ul>
+        </div>
+        <div id="nowplaying">
+          <h3>Currently Playing</h3>
+          <div data-name="nowplaying">
+
+ <span class="songname"><a href="/demovibes/platform/4/"><img alt="AMIGA-AHX" class="platform_icon" src="/static/media/platform/symbol/koekahx.png" title="AMIGA-AHX" /></a><a href="/demovibes/song/38475/">My Commodore</a>
+            <img class="text-link" src="/static/MiniIcon-Video.jpg" alt="Have video" title="Video!" /></span> by
+
+    <span class="artistname">
+         <img src='/static/flags/de.png' class='countryflag' alt='flag' title='de' />
+
+        <a href="/demovibes/artist/776/"
+         >
+         Mem&#39;O&#39;Ree (Gregory Engelhardt)</a>
+    </span>
+
+
+<br />
+
+ Requested By:
+        <span class="username"><img src='/static/flags/ru.png' class='countryflag' alt='flag' title='ru' /><a href="/demovibes/user/ViThor/" title="Staff" >ViThor</a></span>
+    <br />
+
+
+
+
+
+
+ <a href="http://www.pouet.net/prod.php?which=61225" target="_blank"><img alt="Pouet" class="song-resource" src="/static/pouet-icon.gif" title="[Pouet Link]" /></a>
+        <a href="https://www.youtube.com/watch?v=er8CoAAmv2A" target="_blank"><img class="song-resource" alt="Icon" src="/static/youtube_icon.png" title="[YouTube]" /></a>
+
+        <a href="https://demozoo.org/music/59933" target="_blank"><img class="song-resource" alt="Icon" src="/static/media/linkicons/demozoo-16x16.png" title="[Demozoo]" /></a>
+
+        <a href="https://demozoo.org/music/96738" target="_blank"><img class="song-resource" alt="Icon" src="/static/media/linkicons/demozoo-16x16.png" title="[Demozoo]" /></a>
+
+ <br />
+
+ <p>Time Left: <span data-name="counter" data-sec="18" data-inc="-1">5:21</span></p>
+
+
+            </div>
+            <hr style="width: 80%; background-color: #000; height: 1px; border: 0px;" />
+            <input type="button" style="border: 1px solid; border-color: #333;" value="Listen" onclick="window.open('/demovibes/play/','player','width=340,height=25,toolbar=no,scrollbars=no,resizable=no,location=no,directories=no,status=no,menubar=no,copyhistory=no')" /> - <a href="/demovibes/streams/">Streams</a>
+        </div>
+        <div id="sidebarnews">
+            <div class="newsentryside">
+                <h3 class="entrytitle">Nectarine Merch Available</h3>
+                <div class="entrytext"><a href="https://stickers.asmcbain.net" style="display: block"><img src="https://stickers.asmcbain.net/images/the-works-details.jpg" style="max-width: 100%">
+
+<img style="display: block; width: 134px; margin: .125em auto 0" src="https://stickers.asmcbain.net/button-big.png">
+</a>
+<p style="font-size: .9em">Orders will go out within 5-7 days after placing them. <b>Got order notes?</b> Send Starchaser a PM.</p></div>
+            </div>
+
+            <div class="newsentryside">
+                <h3 class="entrytitle">The Masters of Pixel Art - volume 3</h3>
+                <div class="entrytext"><a href="http://nicepixel.se/work-in-progress-volume3/"><img src="http://www.themastersofpixelart.com/images/volume_3mockup-258x323.jpg" style="max-width: 100%"></a>
+<p>Masters of Pixel Art vol 3<br>This book features pictures from the next generation of artists. We explore and present the best of the best pixel art today.</p>
+<button onclick="location.href='http://nicepixel.se/work-in-progress-volume3/'" style="display: block; margin: 0 auto 1em">order here</button></div>
+            </div>
+
+            <div class="newsentryside">
+                <h3 class="entrytitle">Sidebar</h3>
+                <div class="entrytext">Please report any bugs to this forum thread!
+<br>
+&gt; <a href="https://scenestream.net/forum/thread/1">Bug Reporting Thread</a> &lt;
+<hr>
+Song, artist, etc. corrections go here instead:
+<br>
+&gt; <a href="https://scenestream.net/forum/thread/4">Correct DB Info</a> &lt;
+<hr>
+Broken tunes can be reported here:
+<br>
+&gt; <a href="https://scenestream.net/forum/thread/64">Report Broken Tunes Here</a> &lt;</div>
+            </div>
+
+        </div>
 {% endblock %}
       </div>
     </div>

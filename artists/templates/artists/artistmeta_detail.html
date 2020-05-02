@@ -1,10 +1,6 @@
 {% extends 'base/base.html' %}
-{% load admin_urls %}
 
 {% block content %}
-{{ object }}
-<a href="{% url 'artists:artist-update-form' object.pk %}"><b>Submit changes to this Artist</b></a>
-{% comment %}
 <div id="main-header">
   <img class="icon_header" src="{{ MEDIA_URL }}user_green.png" alt="" /><span class="header">Artist Info{% if user.is_staff %} [<a href="{% url opts|admin_urlname:'change' artist.pk %}/">Edit Artist Info</a>]{% endif %}
 </div>
@@ -40,7 +36,7 @@
 
 <p><i>{{ object.info|urlize|linebreaks }}</i></p>
 {% endif %}<br />
-
+{% comment %}
 {% ifequal object.status "A" %}
  <a href="{{ object.get_absolute_url }}upload/">Upload a new song by this artist</a><br />
 {% else %}
