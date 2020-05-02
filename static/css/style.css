@@ -35,3 +35,27 @@ div.column {
   border: 1px solid black;
   padding: 1rem
 }
+
+.user.none:before {
+  content: "👻"
+}
+
+.user.default:before {
+  content: "👤"
+}
+
+.user.staff:before {
+  content: "👷"
+}
+
+.user.superuser:before {
+  content: "👽"
+}
+
+span.artist:before {
+  content: "🎤"
+}
+
+span.song:before {
+  content: "🎵"
+}

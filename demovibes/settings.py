@@ -31,6 +31,8 @@ ALLOWED_HOSTS = [ '*' ]
 
 # Application definition
 
+#PREPEND_WWW = True
+
 INSTALLED_APPS = [
     # Backend control pages
     'backend.apps.BackendConfig',
@@ -144,6 +146,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Logging
 #  Probably turn this off when not debugging
