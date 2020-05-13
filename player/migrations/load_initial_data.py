@@ -12,7 +12,7 @@ def forwards_func(apps, schema_editor):
 def reverse_func(apps, schema_editor):
     Stream = apps.get_model('player', 'Stream')
     db_alias = schema_editor.connection.alias
-    Stream.objects.using(db_alias).filter(url='http://localhost:8000/audio.ogg').delete();
+    Stream.objects.using(db_alias).filter(url='http://localhost:8000/audio.ogg').delete()
 
 class Migration(migrations.Migration):
     dependencies = [

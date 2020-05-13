@@ -1,65 +1,61 @@
 {% extends 'base/base.html' %}
-{% load admin_urls %}
+{% load tags_artists %}
+{% load tags_user_profiles %}
+{% load l10n %}
+
+{% block title %}
+Artist - {{ object.name }}
+{% endblock %}
+
+{% block content_header %}
+Artist - {{ object.name }}{% if perms.artists.change_artist %} [<a href="{% url 'admin:artists_artist_change' object.pk %}">Administrate Artist</a>]{% endif %}
+{% endblock %}
 
 {% block content %}
-{{ object }}
-<a href="{% url 'artists:artist-update-form' object.pk %}"><b>Submit changes to this Artist</b></a>
-{% comment %}
-<div id="main-header">
-  <img class="icon_header" src="{{ MEDIA_URL }}user_green.png" alt="" /><span class="header">Artist Info{% if user.is_staff %} [<a href="{% url opts|admin_urlname:'change' artist.pk %}/">Edit Artist Info</a>]{% endif %}
-</div>
-<div id="artist_details">
-  <div id="artist-image">
-    {% if object.artist_pic %}<img class="artist_logo" src="{{ object.artist_pic.url }}" title="{{ object.handle }}'s Picture" />{% else %}<img class="artist_logo" src="{{ MEDIA_URL }}no_artist_pic.png" alt="No Picture" />{% endif %}
-  </div>
-  <div id="artist_information">
-    <dt>Artist Name</dt><dd>{{ object.name }}</dd>
-{% if object.link_to_user %}
-    <dt>Artist's User Page</dt><dd><a href="/user/{{ object.link_to_user.username }}/">View Artist's User Page</a><br /></dd>
-{% endif %}
-{% if object.alias_of %}
-    <dt>Alias of</dt><dd>{% with object.alias_of as A%}{% include "webview/t/artist.html" %}{% endwith %}</dd>
-{% endif %}
-
-{% if object.aliases.all %}
-    <dt>Other aliases</dt><dd>{% for alias  in object.aliases.all %}<a href="{{ alias.get_absolute_url }}">{{ alias }}</a>{% if forloop.last %}{% else %}, {% endif %}{% endfor %}<br />
-{% endif %}
-
-{% if object.real_name %}
-   <dt>Real Name</dt><dd>{{ object.name }}</dd>
-{% endif %}
-
-{% if object.real_name %}
-   <dt>Real Name</dt><dd>{{ object.name }}</dd>
-{% endif %}
-  </div>
-  <div id="artist-biography">
-{% if object.info %}
-
-<br />Additional Information:<br />
-
-<p><i>{{ object.info|urlize|linebreaks }}</i></p>
-{% endif %}<br />
-
-{% ifequal object.status "A" %}
- <a href="{{ object.get_absolute_url }}upload/">Upload a new song by this artist</a><br />
+  <div class="detail-image">
+{% if object.image %}
+   <img src="{{ object.image.url }}" title="[{{ object.name }}'s Image]" alt="[{{ object.name }}'s Image]" /><br />
 {% else %}
- <strong>Artist Locked For Uploading!</strong><br />
-{% endifequal %}
-<br />
-{% if object.last_updated %}Last Updated: {{ object.last_updated|date:"F j, Y" }}<br />{% endif %}
-{% if object.created_by %}Added By: {% with object.created_by as U %}{% include "webview/t/user.html" %}{% endwith %}<br />{% endif %}
-</td>
-</tr>
-</table>
+   <i>No picture!</i>
+{% endif %}
+  </div>
+  <div class="detail-infobox">
+    <dl>
+      <dt>Name</dt><dd><b>{{ object.name }}</b></dd>
+      {% if object.user %}<dt>Artist's User Page</dt><dd>{% user object.user.username %}</dd>{% endif %}
+      {% if object.alias_of %}<dt>This artist is an alias of</dt><dd>{% artist object.alias_of.pk %}</dd>{% endif %}
+      {% if object.artist_set.exists %}<dt>Other aliases for this artist</dt><dd>{% for alias in object.artist_set.all %}{% artist alias.pk %}{% endfor %}</dd>{% endif %}
+      {% if object.real_name %}<dt>Real Name</dt><dd>{{ object.real_name }}</dd>{% endif %}
+      {% if object.country_code %}<dt>Location</dt><dd>{{ object.country_code }}</dd>{% endif %}
+      <dt>Date Created</dt><dd>{{ object.time_create|localize }}</dd>
+      {% if object.time_modify %}<dt>Last Modified</dt><dd>{{ object.time_modify|localize }}</dd>{% endif %}
+    </dl>
+  </div>
+<h3>Public information</h3>
+{{ object.bio|urlize|linebreaks }}
 
-<h2><img class="icon_header" src="{{ MEDIA_URL }}music.png" alt="" />Songs Connected To This Artist</h2>
-{% include "webview/t/songheader.html" %}
-{% for song in object.song_set.all %}
-<tr class="{% cycle 'row1' 'row2' %}">
-% include "webview/t/songlist.html" %
+{% if perms.artists.create_artistmeta %}<a href="{% url 'artists:artistmeta-create' object.pk %}"><b>Submit changes to this Artist</b></a>{% endif %}
+
+{% if perms.artists.view_artistmeta %}<hr><h3>Artist Metadata History</h3>
+<table>
+<tr>
+  <th>Submitted By</th>
+  <th>Date Submitted</th>
+  <th>Changed Fields</th>
+  <th>Reviewed</th>
+  <th>Accepted</th>
+  <th>Detail View</th>
+</tr>
+{% for artistmeta in object.artistmeta_set.all %}
+<tr>
+    <td>{% user artistmeta.submitter %}</td>
+    <td>{{ artistmeta.time_create|localize }}</td>
+    <td>{{ artistmeta.changed_fields }}</td>
+    <td>{{ artistmeta.reviewed }}</td>
+    <td>{{ artistmeta.accepted }}</td>
+    <td><a href="{% url 'artists:artistmeta-detail' artistmeta.pk %}">Detail View</a></td>
 </tr>
 {% endfor %}
-{% endcomment %}
 </table>
+{% endif %}
 {% endblock %}

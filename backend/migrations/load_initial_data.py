@@ -17,7 +17,7 @@ def forwards_func(apps, schema_editor):
 def reverse_func(apps, schema_editor):
     Service = apps.get_model('backend', 'Service')
     db_alias = schema_editor.connection.alias
-    Service.objects.using(db_alias).filter(name='Icecast').delete();
+    Service.objects.using(db_alias).filter(name='Icecast').delete()
 
 class Migration(migrations.Migration):
     dependencies = [

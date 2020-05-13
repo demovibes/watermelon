@@ -1,10 +1,10 @@
-from django.views.generic.list import ListView
+from django.core.exceptions import PermissionDenied
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
-
-from django.core.exceptions import PermissionDenied
+from django.views.generic.list import ListView
 
 from .models import Profile
+
 
 # General index page for a Profile request
 class ProfileList(ListView):
