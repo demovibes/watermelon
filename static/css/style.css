@@ -52,10 +52,10 @@ div.column {
   content: "👽"
 }
 
-span.artist:before {
+.artist:before {
   content: "🎤"
 }
 
-span.song:before {
+.song:before {
   content: "🎵"
 }

@@ -1,8 +1,15 @@
 {% extends 'base/base.html' %}
 {% load tags_user_profiles %}
 
+{% block title %}
+User Profile List
+{% endblock %}
+
+{% block content_header %}
+User Profile List
+{% endblock %}
+
 {% block content %}
-<h2>User Profile List</h2>
 <ul class="brief-list">
 {% for object in page_obj %}
     <li>{% user object.user.username %}</li>

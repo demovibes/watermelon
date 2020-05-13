@@ -1,17 +1,20 @@
 from django import template
 from django.utils.html import format_html
+
 from ..models import Artist
 
 register = template.Library()
 
-@register.inclusion_tag('artists/tags_artist.html')
+@register.inclusion_tag('artists/tag_artist.html')
 def artist(artist_id):
-    """Renders an Artist for presentation"""
-    object = Artist.objects.get(pk=artist_id, active=True)
-    return { 'object': object }
+    """
+    Display an Artist ID as a link and CSS class.
 
-@register.inclusion_tag('artists/rows_artist.html')
-def artist_row(artist_id):
-    """Renders a table row of Artist"""
-    object = Artist.objects.get(pk=artist_id, active=True)
+    Sample usage:
+
+        {% artist [id] %}
+
+    This retrieves the artist by ``ID`` and creates a link to their detail page, using the artist name as the link text.  The link has a unique class (``artist``) so it can be styled separately.
+    """
+    object = Artist.objects.get(pk=artist_id, is_active=True)
     return { 'object': object }

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Watermelon</title>
+    <title>Watermelon - {% block title %}Welcome{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
   </head>
@@ -17,35 +17,38 @@
         <div id="sitemenu">
           <h3>Welcome, {% if user.is_authenticated %}{{ user.get_username }}{% else %}visitor{% endif %}!</h3>
           <ul class="menulist">
-            <li id="home"><a href="{% url 'index' %}">Home</a></li>
-<!--            <li id="forum"><a href="/forum/">Forum</a></li> -->
-            <li id="songs"><a href="{% url 'song-list-view' %}">Songs</a></li>
-<!--            <li id="song-source"><a href="/demovibes/sources/">Sources</a></li>
-            <li id="song-platform"><a href="/demovibes/platforms/">Platforms</a></li> -->
-            <li id="artists"><a href="{% url 'artists:artist-list' %}">Artists</a></li>
-<!--            <li id="groups"><a href="/demovibes/groups/">Groups</a></li>
-            <li id="labels"><a href="/demovibes/labels/">Labels</a></li>
-            <li id="compilations"><a href="/demovibes/compilations/">Compilations</a></li>
-            <li id="screenshots"><a href="/demovibes/screenshots/">Images</a></li>
-            <li id="licenses"><a href="/demovibes/licenses/">Licenses</a></li>
-            <li id="tagcloud"><a href="/demovibes/tags/">Tag cloud</a></li>
-        <li id="statistics"><a href="/demovibes/statistics/">Statistics</a></li> -->
-            <li>&nbsp;</li>
-            <li id="playlist"><a href="{% url 'entry-list-view' %}">Playlist</a></li>
-            <li>&nbsp;</li>
-<!--            <li id="search"><a href="/search/">Search</a></li>
-            <li id="recent"><a href="/demovibes/recent/">New Uploads</a></li>
-            <li id="recentchanges"><a href="/demovibes/updates/">Recent Updates</a></li>
-            <li>&nbsp;</li>
-            <li id="faq"><a href="/demovibes/faq/">FAQ</a></li>
-            <li id="links"><a href="/demovibes/links/">Links</a></li>
-            <li id="chat"><a href="/demovibes/chat/">Simple Chat</a></li> -->
+            <li class="home"><a href="{% url 'index' %}">Home</a>
+<!--            <li class="forum"><a href="/forum/">Forum</a> -->
+            <li class="song"><a href="{% url 'song-list-view' %}">Songs</a>
+<!--            <li class="song-source"><a href="/demovibes/sources/">Sources</a>
+            <li class="song-platform"><a href="/demovibes/platforms/">Platforms</a> -->
+            <li class="artist"><a href="{% url 'artists:artist-list' %}">Artists</a>
+{% if perms.artists.view_artistmeta %}<ul><li><a href="{% url 'artists:artistmeta-list' %}">Pending Metadata</a></ul>{% endif %}
+<!--            <li class="groups"><a href="/demovibes/groups/">Groups</a>
+            <li class="labels"><a href="/demovibes/labels/">Labels</a>
+            <li class="compilations"><a href="/demovibes/compilations/">Compilations</a>
+            <li class="screenshots"><a href="/demovibes/screenshots/">Images</a>
+            <li class="licenses"><a href="/demovibes/licenses/">Licenses</a>
+            <li class="tagcloud"><a href="/demovibes/tags/">Tag cloud</a>
+        <li class="statistics"><a href="/demovibes/statistics/">Statistics</a> -->
+            <li>&nbsp;
+            <li class="playlist"><a href="{% url 'entry-list-view' %}">Playlist</a>
+            <li>&nbsp;
+<!--            <li class="search"><a href="/search/">Search</a>
+            <li class="recent"><a href="/demovibes/recent/">New Uploads</a>
+            <li class="recentchanges"><a href="/demovibes/updates/">Recent Updates</a>
+            <li>&nbsp;
+            <li class="faq"><a href="/demovibes/faq/">FAQ</a>
+            <li class="links"><a href="/demovibes/links/">Links</a>
+            <li class="chat"><a href="/demovibes/chat/">Simple Chat</a> -->
           </ul>
         </div>
         <div id="chatbox-small">
           <h3>Site Chat</h3>
 {% if user.is_authenticated %}
-          <form action="javascript:chat_post()" method="POST">
+Chat would go here.
+{% comment %}
+           <form action="javascript:chat_post()" method="POST">
             {% csrf_token %}
             {{ form }}
             <input type="submit">
@@ -57,6 +60,7 @@
             <span class="chat-message-text">{{ message.text }}</span>
           </p>
 {% endfor %}
+{% endcomment %}
 {% else %}
           <b>You must be logged in to view site chat.</b>
 {% endif %}
@@ -70,30 +74,44 @@
 <p>There SHOULD be an anonymized list of users here, if implemented.
 {% endif %}
           <h3>Our Newest User:</h3>
-	  {% user 'DJRandom' %}
+          {% user 'DJRandom' %}
         </div>
 {% endblock %}
       </div>
       <div id="content" class="column">
-{% block content %}
-<h2>welcome to watermelon</h2>
-some links:
-<p><b><a href="{% url 'player-view' %}" target="_blank">listen now</a></b>
-<p><a href="{% url 'entry-list-view' %}">playlist</a>
-<hr>
-user mgmt:
-{% if user.is_authenticated %}
-<p>logged in as <b>{{ user.username }}</b> (<a href="{% url 'logout' %}">logout</a>)
-{% else %}
-<p>not logged in (<a href="{% url 'login' %}">login</a>)
+{% block messages %}
+{% if messages %}
+        <ul class="messagelist">{% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}
+        {% endfor %}</ul>
 {% endif %}
-<ul>
-<li><a href="{% url 'artists:artist-list' %}">artists</a></li>
-<li><a href="{% url 'song-list-view' %}">songs</a></li>
-<li><a href="{% url 'stream-list-view' %}">streams</a></li>
-<li><a href="{% url 'user_profiles:profile-list' %}">user-profiles</a></li>
-</ul>
+{% endblock messages %}
+
+        <div id="content-header">
+{% block content_header %}
+          welcome to watermelon
 {% endblock %}
+        </div>
+        <div id="content-main">
+{% block content %}
+          some links:
+          <p><b><a href="{% url 'player-view' %}" target="_blank">listen now</a></b>
+          <p><a href="{% url 'entry-list-view' %}">playlist</a>
+          <hr>
+          user mgmt:
+          {% if user.is_authenticated %}
+          <p>logged in as <b>{{ user.username }}</b> (<a href="{% url 'logout' %}">logout</a>)
+          {% else %}
+          <p>not logged in (<a href="{% url 'login' %}">login</a>)
+          {% endif %}
+          <ul>
+          <li><a href="{% url 'artists:artist-list' %}">artists</a>
+          <li><a href="{% url 'song-list-view' %}">songs</a>
+          <li><a href="{% url 'stream-list-view' %}">streams</a>
+          <li><a href="{% url 'user_profiles:profile-list' %}">user-profiles</a>
+          </ul>
+{% endblock %}
+        </div>
       </div>
       <div id="right-sidebar" class="column">
 {% block right-sidebar %}
@@ -101,38 +119,38 @@ user mgmt:
         <h3>User Menu</h3>
         <ul class="menulist">
 {% if user.is_authenticated %}
-          <li id="profile"><a href="/demovibes/user/">Edit My Profile</a></li>
-          <li id="favorites"><a href="/demovibes/favorites/">My Favourites</a></li>
-          <li id="inbox"><a href="/demovibes/inbox/">My Inbox</a></li>
-          <li id="logout"><a href="{% url 'logout' %}">Log Me Out</a></li>
+          <li id="profile"><a href="/demovibes/user/">Edit My Profile</a>
+          <li id="favorites"><a href="/demovibes/favorites/">My Favourites</a>
+          <li id="inbox"><a href="/demovibes/inbox/">My Inbox</a>
+          <li id="logout"><a href="{% url 'logout' %}">Log Me Out</a>
 
-          <li id="admin"><a href="/admin" target="admin">Admin Area</a></li>
-          <li id="menuqueue"><a href="/demovibes/uploaded_songs/">Unapproved Uploads</a> </li>
-          <li id="menumute"><a href="/demovibes/oneliner/mute/">Mute account</a></li>
-
-
-          <li></li>
-
-          <li id="unap-artists"><a href="/demovibes/new_artists/">Pending Artists</a> </li>
+          <li id="admin"><a href="/admin" target="admin">Admin Area</a>
+          <li id="menuqueue"><a href="/demovibes/uploaded_songs/">Unapproved Uploads</a> 
+          <li id="menumute"><a href="/demovibes/oneliner/mute/">Mute account</a>
 
 
-          <li id="unap-groups"><a href="/demovibes/new_groups/">Pending Groups</a> </li>
+          <li>
+
+          <li id="unap-artists"><a href="/demovibes/new_artists/">Pending Artists</a> 
 
 
-          <li id="unap-compilations"><a href="/demovibes/new_compilations/">Pending Compilations</a> </li>
+          <li id="unap-groups"><a href="/demovibes/new_groups/">Pending Groups</a> 
 
 
-          <li id="unap-labels"><a href="/demovibes/new_labels/">Pending Labels</a> </li>
+          <li id="unap-compilations"><a href="/demovibes/new_compilations/">Pending Compilations</a> 
 
 
-          <li id="unap-screenshots"><a href="/demovibes/new_screenshots/">Pending Screenshots</a> </li>
+          <li id="unap-labels"><a href="/demovibes/new_labels/">Pending Labels</a> 
 
 
-          <li id="unap-links"><a href="/demovibes/link/pending/">Pending Links</a> </li>
+          <li id="unap-screenshots"><a href="/demovibes/new_screenshots/">Pending Screenshots</a> 
 
-          <li id="unap-nju"><a href="/demovibes/newshit/">New info</a> </li>
+
+          <li id="unap-links"><a href="/demovibes/link/pending/">Pending Links</a> 
+
+          <li id="unap-nju"><a href="/demovibes/newshit/">New info</a> 
 {% else %}
-          <li id="login"><a href="{% url 'login' %}">Log In / Register</a></li>
+          <li id="login"><a href="{% url 'login' %}">Log In / Register</a>
 {% endif %}
         </ul>
         </div>
@@ -180,6 +198,7 @@ user mgmt:
             <input type="button" style="border: 1px solid; border-color: #333;" value="Listen" onclick="window.open('/demovibes/play/','player','width=340,height=25,toolbar=no,scrollbars=no,resizable=no,location=no,directories=no,status=no,menubar=no,copyhistory=no')" /> - <a href="/demovibes/streams/">Streams</a>
         </div>
         <div id="sidebarnews">
+	<!--
             <div class="newsentryside">
                 <h3 class="entrytitle">Nectarine Merch Available</h3>
                 <div class="entrytext"><a href="https://stickers.asmcbain.net" style="display: block"><img src="https://stickers.asmcbain.net/images/the-works-details.jpg" style="max-width: 100%">
@@ -210,7 +229,7 @@ Broken tunes can be reported here:
 <br>
 &gt; <a href="https://scenestream.net/forum/thread/64">Report Broken Tunes Here</a> &lt;</div>
             </div>
-
+-->
         </div>
 {% endblock %}
       </div>
