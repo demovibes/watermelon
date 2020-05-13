@@ -34,6 +34,10 @@ ALLOWED_HOSTS = [ '*' ]
 #PREPEND_WWW = True
 
 INSTALLED_APPS = [
+    # Key-Value store for site settings
+    #  also contains 'common' abstract models etc
+    'core.apps.CoreConfig',
+
     # Backend control pages
     'backend.apps.BackendConfig',
 
@@ -84,7 +88,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                'chat.context_processors.chat_recent',
+                'core.context_processors.settings',
+#                'chat.context_processors.chat_recent',
             ],
         },
     },

@@ -3,13 +3,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Watermelon - {% block title %}Welcome{% endblock %}</title>
+    <title>{{ settings.site_name }} - {% block title %}Welcome{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
   </head>
   <body>
     <div id="header">
-      <h1><a href="/">Watermelon</a></h1>
+      <h1><a href="/">{{ settings.site_name }}</a></h1>
     </div>
     <div id="main">
       <div id="left-sidebar" class="column">
@@ -89,7 +89,7 @@ Chat would go here.
 
         <div id="content-header">
 {% block content_header %}
-          welcome to watermelon
+          welcome to {{ settings.site_name }}
 {% endblock %}
         </div>
         <div id="content-main">
