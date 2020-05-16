@@ -45,7 +45,7 @@ Django 2.2.
 5. Launch the development server.  From the root folder, run this command:
     `python manage.py runserver`
     This will start a local webserver for testing watermelon, running at
-    http://127.0.0.1:8000/.  (To run an server that can be accessed externally,
+    http://127.0.0.1:8000/.  (To run a server that can be accessed externally,
     add an IP and port, as in `python manage.py runserver 0:8080`)
     Note that the Icecast default port is 8000, so the dev server should be run
     on a different port.
