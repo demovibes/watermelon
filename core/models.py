@@ -1,6 +1,24 @@
 from django.db import models
 
 
+##############################################################################
+# RE-USABLE MODELS AND FIELDS GO HERE
+##############################################################################
+
+# This is a parent model that tracks created / modified
+class AutoCreateModify(models.Model):
+
+    time_create = models.DateTimeField(auto_now_add=True,
+        help_text="Timestamp when this item was created")
+    time_modify = models.DateTimeField(auto_now=True,
+        help_text="Timestamp when this item was modified")
+
+    class Meta:
+        abstract = True
+
+##############################################################################
+# THIS MODEL IS FOR THE SITE-WIDE SETTINGS KNOBS
+##############################################################################
 class Setting(models.Model):
     """
     Site-wide global settings that can be changed at run-time.

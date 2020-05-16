@@ -3,8 +3,10 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 
+from core.models import AutoCreateModify
 
-class ArtistBase(models.Model):
+
+class ArtistBase(AutoCreateModify):
     """
     ArtistBase is an abstract class of fields which can be updated by users in
     a meta request.  It is useful to avoid redundancy by allowing the same
@@ -27,12 +29,6 @@ class ArtistBase(models.Model):
     alias_of = models.ForeignKey('Artist', blank=True, null=True, on_delete=models.SET_NULL,
         related_name="%(app_label)s_%(class)s_related",
         help_text="If this artist is a pseudonym of another, enter the primary artist ID here.")
-
-    # bookkeeping
-    time_create = models.DateTimeField(auto_now_add=True,
-        help_text="Timestamp when this item was created")
-    time_modify = models.DateTimeField(auto_now=True,
-        help_text="Timestamp when this item was modified")
 
     class Meta:
         abstract = True
