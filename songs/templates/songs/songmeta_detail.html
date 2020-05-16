@@ -1,0 +1,47 @@
+{% extends 'base/base.html' %}
+{% load tags_songs %}
+{% load tags_user_profiles %}
+{% load l10n %}
+
+{% block title %}
+Song Meta - {{ object.song.name }}
+{% endblock %}
+
+{% block content_header %}
+Song Meta - {{ object.song.name }}{% if perms.songs.change_song %} [<a href="{% url 'admin:songs_song_change' object.pk %}">Administrate Song</a>]{% endif %}
+{% endblock %}
+
+{% block content %}
+  <dl>
+    <dt>Song</dt><dd>{% song object.song.pk %}</dd>
+    <dt>Reviewed</dt><dd>{{ object.reviewed }}</dd>
+    <dt>Accepted</dt><dd>{{ object.accepted }}</dd>
+    <dt>Added By</dt><dd>{% user object.submitter.username %}</dd>
+    <dt>Added On</dt><dd>{{ object.time_create|localize }}</dd>
+    <dt>Changed Fields</dt><dd>{{ object.changed_fields }}</dd>
+  </dl>
+  Changes
+  <table>
+    <tr>
+      <th>Field</th>
+      <th>Current Value</th>
+      <th>Suggested New Value</th>
+    </tr>
+{% for field in changed_fields %}
+    <tr>
+      <td>{{ field.name }}</td>
+      <td>{{ field.current|urlize|linebreaks }}</td>
+      <td>{{ field.new|urlize|linebreaks }}</td>
+    </tr>
+{% endfor %}
+  </table>
+{% if perms.songs.change_songmeta %}
+  Action
+  <form method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" name="accept" value="Accept Change">
+    <input type="submit" name="reject" value="Reject Change">
+  </form>
+{% endif %}
+{% endblock %}

@@ -1,8 +1,11 @@
 from django.contrib import admin
 
-# Register your models here.
-from .models import Song
-from .models import Platform
+from .models import Song, SongBase
 
-admin.site.register(Song)
-admin.site.register(Platform)
+
+# Register Song model on the Admin page
+@admin.register(Song)
+class SongAdmin(admin.ModelAdmin):
+    # SongBase fields should not be editable: these must be changed via the
+    #  normal metadata submission process.
+    readonly_fields = list(map(lambda field: field.name, SongBase._meta.get_fields()))

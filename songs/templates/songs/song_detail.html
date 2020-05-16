@@ -1,5 +1,53 @@
 {% extends 'base/base.html' %}
+{% load tags_songs %}
+{% load tags_artists %}
+{% load l10n %}
+
+{% block title %}
+Song - {{ object.name }}
+{% endblock %}
+
+{% block content_header %}
+Song - {{ object.name }}{% if perms.songs.change_song %} [<a href="{% url 'admin:songs_song_change' object.pk %}">Administrate Song</a>]{% endif %}
+{% endblock %}
 
 {% block content %}
-{{ object }}
+  <div class="detail-infobox">
+    <dl>
+      <dt>Name</dt><dd><b>{{ object.name }}</b></dd>
+      <dt>Artists</dt><dd>{% for artist in object.artist.all %}{% artist artist.pk %}{% endfor %}</dd>
+      <dt>Release Date</dt><dd>{{ object.release_date|localize }}</dd>
+      <dt>Filesize</dt><dd>{{ object.path.size|filesizeformat }}</dd>
+      <dt>Date Created</dt><dd>{{ object.time_create|localize }}</dd>
+      {% if object.time_modify %}<dt>Last Modified</dt><dd>{{ object.time_modify|localize }}</dd>{% endif %}
+    </dl>
+  </div>
+<h3>Public information</h3>
+{{ object.info|urlize|linebreaks }}
+
+{% if perms.songs.create_songmeta %}<a href="{% url 'songs:songmeta-create' object.pk %}"><b>Submit changes to this Song</b></a>{% endif %}
+
+{% if perms.songs.view_songmeta %}<hr><h3>Song Metadata History</h3>
+{% load tags_user_profiles %}
+<table>
+<tr>
+  <th>Submitted By</th>
+  <th>Date Submitted</th>
+  <th>Changed Fields</th>
+  <th>Reviewed</th>
+  <th>Accepted</th>
+  <th>Detail View</th>
+</tr>
+{% for songmeta in object.songmeta_set.all %}
+<tr>
+    <td>{% user songmeta.submitter %}</td>
+    <td>{{ songmeta.time_create|localize }}</td>
+    <td>{{ songmeta.changed_fields }}</td>
+    <td>{{ songmeta.reviewed }}</td>
+    <td>{{ songmeta.accepted }}</td>
+    <td><a href="{% url 'songs:songmeta-detail' songmeta.pk %}">Detail View</a></td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
 {% endblock %}
