@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 
+from core.models import AutoCreateModify
+
 
 def id_bucket_path(instance, filename):
     # files are stored in a bucket of up to 250 entries, keyed by song ID
@@ -11,7 +13,7 @@ def id_bucket_path(instance, filename):
     bucket = instance.song.pk // bucket_size
     return 'songs/{0:05d}-{1:05d}/{2:05d}_-_{3:s}'.format(bucket_size*bucket, bucket_size*(bucket+1) - 1, instance.song.pk, filename)
 
-class SongBase(models.Model):
+class SongBase(AutoCreateModify):
     """
     SongBase is an abstract class of fields which can be updated by users in
     a meta request.  It is useful to avoid redundancy by allowing the same
@@ -35,12 +37,6 @@ class SongBase(models.Model):
         help_text="Original release date of the song")
     info = models.TextField(blank=True,
         help_text='Additional information about this song')
-
-    # bookkeeping
-    time_create = models.DateTimeField(auto_now_add=True,
-        help_text="Timestamp when this item was created")
-    time_modify = models.DateTimeField(auto_now=True,
-        help_text="Timestamp when this item was modified")
 
     class Meta:
         abstract = True
