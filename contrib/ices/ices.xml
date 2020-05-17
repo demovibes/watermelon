@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ices>
     <!-- run in background -->
-    <background>0</background>
+    <background>1</background>
     <!-- where logs, etc go. -->
     <logpath>/var/log/ices</logpath>
     <logfile>ices.log</logfile>
@@ -11,7 +11,7 @@
     <consolelog>0</consolelog>
 
     <!-- optional filename to write process id to -->
-    <!-- <pidfile>/home/ices/ices.pid</pidfile> -->
+    <pidfile>/var/run/ices.pid</pidfile>
 
     <stream>
         <!-- metadata used for stream listing (not currently used) -->
@@ -31,8 +31,8 @@
 
         <input>
             <module>playlist</module>
-            <param name="type">basic</param>
-            <param name="file">playlist.txt</param>
+            <param name="type">script</param>
+            <param name="file">link-ices.py</param>
             <!-- random play -->
             <param name="random">0</param>
             <!-- if the playlist get updated that start at the beginning -->

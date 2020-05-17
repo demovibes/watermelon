@@ -1,28 +1,38 @@
 {% extends 'base/base.html' %}
-{% load admin_urls %}
-{% debug %}
+
+{% block title %}
+Service - {{ object.name }}
+{% endblock %}
+
+{% block content_header %}
+Service - {{ object.name }}{% if perms.backend.change_service %} [<a href="{% url 'admin:backend_service_change' object.pk %}">Administrate Service</a>]{% endif %}
+{% endblock %}
+
 {% block content %}
-<h2>{{ object.name }} Service Status</h2>
-<a href="{% url 'service-list-view' %}">View all Services</a>
-{% comment %}<a href="{% url opts|admin_urlname:'change' object.pk %}">Edit Service Info</a>{% endcomment %}
+<dl>
+  <dt>Service Name</dt><dd>{{ object.name }}</dd>
+  <dt>Service Description</dt><dd>{{ object.description }}</dd>
+</dl>
 <hr>
-<dd>Service Name</dd><dt>{{ object.name }}</dt>
-<dd>Service Description</dd><dt>{{ object.description }}</dt>
-<dd>Service Status Code</dd><dt>{{ object.status_code }}</dt>
-<dd>Service Status Message</dd><dt>{{ object.status_message }}</dt>
+{% for command in object.command_set.all %}{% if command.autorun %}
+<dl>
+  <dt>Command</dt><dd>{{ command.name }}</dd>
+  <dt>Return Code</dt><dd>{{ command.run.0 }}</dd>
+  <dt>Output</dt><dd><pre>{{ command.run.1 }}</pre></dd>
+</dl>
 <hr>
-<form action="{% url 'service-detail-view' object.pk %}" method="post">
+{% endif %}{% endfor %}
+<form action="{% url 'backend:service-detail' object.pk %}" method="post">
 {% csrf_token %}
-<input type="submit" name="command_start" value="Start Service">
-<input type="submit" name="command_stop" value="Stop Service">
-</form>
-{% for file in object.file_list %}
-<hr>
-<form action="{% url 'service-post-file' object.pk %}" method="post">
-{% csrf_token %}
-<label for="content">{{ file.name }} ({{ file.path }})</label>
-<br><textarea name="content"{% if file.readonly %} readonly{% endif %}>{{ file.content }}</textarea>
-<br><input type="submit" value="Save">
-</form>
+{% if perms.backend.change_service %}{% for command in object.command_set.all %}
+  <input type="submit" name="command_{{ command.pk }}" value="{{ command.name }}">
+{% endfor %}{% endif %}
+{% for file in object.file_set.all %}
+  <hr>
+  <label for="file_content_{{ file.pk }}">{{ file.name }} ({{ file.path }})</label>
+  <br>{% if file.content %}<textarea name="file_content_{{ file.pk }}"{% if file.readonly %} readonly{% endif %}>{{ file.content }}</textarea>{% else %}<b>File does not exist.</b>{% endif %}
+{% if perms.backend.change_service and not file.readonly %}<br><input type="submit" name="file_save_{{ file.pk }}" value="Save">{% endif %}
 {% endfor %}
+  <hr>
+</form>
 {% endblock %}

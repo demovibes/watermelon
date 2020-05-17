@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.forms import Form
+from django.forms import Form, ValidationError
 from django.urls import reverse
 from django.views import View
 from django.views.generic import FormView
@@ -93,12 +93,6 @@ class SongMetaForm(PermissionRequiredMixin, SingleObjectMixin, FormView):
         self.object = self.get_object()
         return super().post(request, *args, **kwargs)
 
-    def clean(self):
-        # Require that either "approve" or "reject" appear in data
-        if not ('accept' in self.data or 'reject' in self.data):
-            raise forms.validationError('Invalid POST request')
-
-        super().clean()
 
     def form_valid(self, form):
         # switch behavior based on accept or reject
@@ -115,8 +109,10 @@ class SongMetaForm(PermissionRequiredMixin, SingleObjectMixin, FormView):
 
             # set ourselves as approved
             self.object.accepted = True
-        else:
+        elif 'reject' in form.data:
             self.object.accepted = False
+        else:
+            raise ValidationError('Invalid POST request', code='invalid')
 
         # in either case, mark this as reviewed
         self.object.reviewed = True
