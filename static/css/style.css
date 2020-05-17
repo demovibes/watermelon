@@ -59,3 +59,7 @@ div.column {
 .song:before {
   content: "🎵"
 }
+
+.service:before {
+  content: "🔌"
+}

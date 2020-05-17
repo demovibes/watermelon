@@ -36,6 +36,7 @@
             <li>&nbsp;
             <li class="playlist"><a href="{% url 'entry-list-view' %}">Playlist</a>
             <li>&nbsp;
+{% if perms.backend.view_service %}<li class="service"><a href="{% url 'backend:service-list' %}">Service List</a>{% endif %}
 <!--            <li class="search"><a href="/search/">Search</a>
             <li class="recent"><a href="/demovibes/recent/">New Uploads</a>
             <li class="recentchanges"><a href="/demovibes/updates/">Recent Updates</a>
@@ -83,9 +84,11 @@ Chat would go here.
       <div id="content" class="column">
 {% block messages %}
 {% if messages %}
-        <ul class="messagelist">{% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}
-        {% endfor %}</ul>
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|linebreaks }}</li>
+    {% endfor %}
+</ul>
 {% endif %}
 {% endblock messages %}
 

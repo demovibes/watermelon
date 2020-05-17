@@ -1,8 +1,14 @@
 {% extends 'base/base.html' %}
 
+{% block title %}
+Service List
+{% endblock %}
+
+{% block content_header %}
+Service List
+{% endblock %}
+
 {% block content %}
-<h2>Backend Service Status</h2>
-<hr>
 <table>
 <tr>
   <th>Service Name</th>
@@ -13,7 +19,7 @@
 <tr>
     <td>{{ object.name }}</td>
     <td>{{ object.description }}</td>
-    <td><a href="{% url 'service-detail-view' object.pk %}">Detail Page</a></td>
+    <td><a href="{% url 'backend:service-detail' object.pk %}">Detail Page</a></td>
 </tr>
 {% endfor %}
 </table>

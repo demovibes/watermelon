@@ -1,7 +1,10 @@
 from django.urls import path
-from .views import ServiceListView, ServiceDetailView
+
+from .views import ServiceDual, ServiceList
+
+app_name = 'backend'
 
 urlpatterns = [
-    path('', ServiceListView.as_view(), name='service-list-view'),
-    path('<str:pk>/', ServiceDetailView.as_view(), name='service-detail-view'),
+    path('<str:pk>/', ServiceDual.as_view(), name='service-detail'),
+    path('', ServiceList.as_view(), name='service-list'),
 ]
