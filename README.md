@@ -37,6 +37,9 @@ Django 2.2.
     `python manage.py makemigrations` and then `python manage.py migrate` will
     create the skeleton for your new DB.
 
+    A shortcut script to delete and recreate the initial DB, `reset-db.sh`, is
+    found in the root folder.
+
     Watermelon now includes initial data migrations to bootstrap the service.
     An "admin" superuser with password "password" is created at first migration.
     **Change this password before going live with the site** or you will be
@@ -50,6 +53,9 @@ Django 2.2.
     Note that the Icecast default port is 8000, so the dev server should be run
     on a different port.
 
+    A shortcut script to launch the server, `runserfer.sh`, is found in the
+    root folder.
+
 ## Setting up a Streamer
 Once you have watermelon up it is time to set up a streamer to actually play music.
 This example will use icecast + ices to run the backend.
@@ -59,7 +65,7 @@ The general idea is:
     django -----> DB
       ^
       |
-    link-ices.py -> ices -> icecast
+    <script>.py <-> ices -> icecast
       |              ^
       v              |
      sox  -----------/
@@ -69,14 +75,19 @@ external clients to connect to it for broadcast listening.  ices is a "source"
 which can read .ogg files and forward them to icecast.
 
 Configure ices using a "playlist" source of type "script" and give it the path
-to `contrib/link-ices.py`.  Whenever ices is ready for another song, it will
+to `contrib/ices/<script>.py`.  Whenever ices is ready for another song, it will
 call the script, and expects to receive the name of a file to play.
 
-The magic of queue management then happens within `link-ices.py`, which is
+The magic of queue management then happens within the contrib script, which is
 responsible for:
 * retrieving the next item from the playlist model,
-* calling SoX to convert to a .ogg file in a temp location,
+* if necessary, calling SoX to convert to a .ogg file in a temp location,
 * writing the metadata info to the location expected by IceS, and
 * returning the temp filename to IceS for streaming.
 
 Look into the `playlist` app for more information on how the queue works.
+
+The `backend` app can be used to set up commands to query backend status.  The
+default install comes with some defaults for `icecast` and `ices` - these can
+be changed from the Admin panel to fit your streaming setup, and then non-admin
+users can get status or start/stop/etc services from the UI.

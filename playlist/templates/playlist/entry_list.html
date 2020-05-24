@@ -1,5 +1,58 @@
 {% extends 'base/base.html' %}
+{% load tags_songs %}
+{% load tags_artists %}
+{% load tags_user_profiles %}
+
+{% block title %}
+Playlist
+{% endblock %}
+
+{% block content_header %}
+Playlist
+{% endblock %}
 
 {% block content %}
-{{ object_list }}
+<h3>Upcoming</h3>
+<table>
+  <tr>
+    <th>Song Title</th>
+    <th>Artist</th>
+    <th>Song Length</th>
+    <th>Request Time</th>
+    <th>Play Time</th>
+    <th>Requested By</th>
+  </tr>
+{% for entry in entry_upcoming %}
+  <tr>
+    <td>{% song entry.song.pk %}</td>
+    <td>{% for artist in entry.song.artist.all %}{% artist artist.pk %} {% endfor %}</td>
+    <td>{{ entry.song.duration }} </td>
+    <td>{{ entry.time_request|date:"H:i" }}</td>
+    <td>n/a</td>
+    <td>{% user entry.user.username %}</td>
+  </tr>
+{% endfor %}
+</table>
+
+<h3>Recently Played</h3>
+<table>
+  <tr>
+    <th>Song Title</th>
+    <th>Artist</th>
+    <th>Song Length</th>
+    <th>Request Time</th>
+    <th>Play Time</th>
+    <th>Requested By</th>
+  </tr>
+{% for entry in entry_recent %}
+  <tr>
+    <td>{% song entry.song.pk %}</td>
+    <td>{% for artist in entry.song.artist.all %}{% artist artist.pk %} {% endfor %}</td>
+    <td>{{ entry.song.duration }} </td>
+    <td>{{ entry.time_request|date:"H:i" }}</td>
+    <td>{{ entry.time_play|date:"H:i" }}</td>
+    <td>{% user entry.user.username %}</td>
+  </tr>
+{% endfor %}
+</table>
 {% endblock %}

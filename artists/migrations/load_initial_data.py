@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.core.management import call_command
 from django.db import migrations
 
 

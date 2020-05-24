@@ -6,3 +6,6 @@ Pillow>=2
 docutils>=0.15
 # REST API support
 #djangorestframework
+# If you intend to use Sox or ffmpeg, uncomment:
+ffmpeg-python
+sox

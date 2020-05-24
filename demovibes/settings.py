@@ -157,6 +157,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Logging
 #  Probably turn this off when not debugging
+"""
 LOGGING = {
     'version': 1,
     'filters': {
@@ -178,3 +179,4 @@ LOGGING = {
         }
     }
 }
+"""

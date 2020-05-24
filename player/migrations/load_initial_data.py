@@ -2,6 +2,7 @@
 
 from django.db import migrations
 
+
 def forwards_func(apps, schema_editor):
     Stream = apps.get_model('player', 'Stream')
     db_alias = schema_editor.connection.alias

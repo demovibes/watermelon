@@ -2,7 +2,6 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.forms import Form, ValidationError
 from django.urls import reverse
 from django.views import View
-from django.views.generic import FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import CreateView, FormView
 from django.views.generic.list import ListView

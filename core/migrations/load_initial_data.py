@@ -1,9 +1,14 @@
 # Load initial data for the app
 
+import os
+
 from django.db import migrations
+
+from demovibes.settings import BASE_DIR
 
 base_settings = [
       { 'key': 'site_name', 'value': 'Watermelon', 'description': 'Site name to display in all pages' },
+      { 'key': 'scan_tool', 'value': os.path.join(BASE_DIR, 'contrib/scan/soxi.py'), 'description': 'Path to scan tool, used for getting information about uploaded files' },
     ]
 
 def forwards_func(apps, schema_editor):

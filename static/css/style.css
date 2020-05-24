@@ -60,6 +60,18 @@ div.column {
   content: "🎵"
 }
 
+.playlist:before {
+  content: "⏯"
+}
+
 .service:before {
   content: "🔌"
+}
+
+.status-normal:before {
+  content: "✔"
+}
+
+.status-error:before {
+  content: "❌"
 }

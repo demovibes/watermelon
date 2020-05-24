@@ -1,9 +1,12 @@
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
+from django.utils.functional import cached_property
 
 from core.models import AutoCreateModify
+
+from .fields import AudioField
 
 
 def id_bucket_path(instance, filename):
@@ -28,15 +31,33 @@ class SongBase(AutoCreateModify):
     artist = models.ManyToManyField('artists.Artist',
         help_text='Artist(s) who created the song')
 
-    # The uploaded file.
-    path = models.FileField(upload_to=id_bucket_path,
-        help_text='Local path to file on server')
-
     # Some other info
     release_date = models.DateField(blank=True, null=True,
         help_text="Original release date of the song")
     info = models.TextField(blank=True,
         help_text='Additional information about this song')
+
+    # The uploaded file.
+    filepath = AudioField(upload_to=id_bucket_path, unique=True,
+        file_type_field='file_type', sample_rate_field='sample_rate',
+        channels_field='channels', duration_field='duration',
+        bit_rate_field='bit_rate',
+        help_text='Local path to file on server')
+
+    # Info about the file
+    file_type = models.CharField(max_length=255, editable=False,
+        help_text='Format or codec of the uploaded file')
+    sample_rate = models.PositiveIntegerField(editable=False,
+        help_text='Sample rate (in hz) of the file')
+    channels = models.PositiveSmallIntegerField(editable=False,
+        help_text='Sound channels (mono, stereo, etc)')
+    duration = models.DurationField(editable=False,
+        help_text='Length of the song')
+    bit_rate = models.PositiveIntegerField(editable=False,
+        help_text='Approximate bit rate of the song, in bits per second')
+#    checksum must wait: there is no good container for it :(
+#    checksum = models.BinaryField(length=32, unique=True,
+#        help_text='SHA-256 checksum of file contents')
 
     class Meta:
         abstract = True
@@ -58,6 +79,13 @@ class Song(SongBase):
     # basic state flags for song entry
     is_active = models.BooleanField(default=True,
         help_text='Designates whether this song should be treated as active. Unselect this instead of deleting songs.')
+
+    locked_until = models.DateTimeField(default=timezone.now,
+        help_text='Song cannot be requested until this time')
+
+    @cached_property
+    def available(self):
+        return (self.locked_until < timezone.now())
 
     def get_absolute_url(self):
         return reverse('songs:song-detail', kwargs={'pk': self.pk})

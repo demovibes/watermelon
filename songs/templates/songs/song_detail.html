@@ -16,11 +16,25 @@ Song - {{ object.name }}{% if perms.songs.change_song %} [<a href="{% url 'admin
     <dl>
       <dt>Name</dt><dd><b>{{ object.name }}</b></dd>
       <dt>Artists</dt><dd>{% for artist in object.artist.all %}{% artist artist.pk %}{% endfor %}</dd>
+      <dt>Duration</dt><dd>{{ object.duration }}</dd>
       <dt>Release Date</dt><dd>{{ object.release_date|localize }}</dd>
-      <dt>Filesize</dt><dd>{{ object.path.size|filesizeformat }}</dd>
+      <dt>Filesize</dt><dd>{{ object.filepath.size|filesizeformat }}</dd>
+      <dt>Format</dt><dd>{{ object.file_type }}</dd>
+      <dt>Channels</dt><dd>{{ object.channels }}</dd>
+      <dt>Sample Rate</dt><dd>{{ object.sample_rate }}</dd>
+      <dt>Bit Rate</dt><dd>{{ object.bit_rate }}</dd>
       <dt>Date Created</dt><dd>{{ object.time_create|localize }}</dd>
       {% if object.time_modify %}<dt>Last Modified</dt><dd>{{ object.time_modify|localize }}</dd>{% endif %}
     </dl>
+  </div>
+  <div>
+{% if perms.playlist.create_entry %}
+  {% if song.available %}
+    <a href="{% url 'playlist:entry-add' object.pk %}">Queue song!</a>
+  {% else %}
+    <b>Song is currently locked, and will be available {{ song.locked_until }}.</b>
+  {% endif %}
+{% endif %}
   </div>
 <h3>Public information</h3>
 {{ object.info|urlize|linebreaks }}

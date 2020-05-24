@@ -1,9 +1,9 @@
-import os
 import shlex
 from subprocess import PIPE, STDOUT, run
 
 from django.db import models
 from django.utils.functional import cached_property
+
 
 class Service(models.Model):
     """
@@ -13,6 +13,10 @@ class Service(models.Model):
     easier.  The idea is to add each service's name, description, config file
     location, and commands to start/stop/check status.  From there, an admin
     can use the existing UI to manage backend services.
+
+    The "autorun" key will cause the command to be run automatically
+    on the detail page.  Usually this is for "status" type commands, so
+    service status can be determined quickly.
     """
 
     name = models.CharField(max_length=191, primary_key=True,
@@ -23,6 +27,11 @@ class Service(models.Model):
 
     pidfile = models.CharField(max_length=255, blank=True,
         help_text='PID file of process.  If set, $PID will be passed to environment of commands.')
+
+    # TODO: limit_choices_to only those that have self as .service... but 'self' is not supported in
+    #  limit_choices_to... would have to be a custom admin page.
+    autorun_command = models.OneToOneField('Command', related_name='autorun_command', blank=True, null=True, on_delete=models.SET_NULL,
+        help_text='Designated autorun command for this service.')
 
     notes = models.TextField(blank=True,
         help_text='Free-form area for leaving notes to yourself')
@@ -41,10 +50,6 @@ class Command(models.Model):
     Adding a command to a service will create an additional button in the
     detail view.  Clicking the button triggers the command, returning the
     output to the user.
-
-    The option "autorun" will cause the command to be run automatically
-    on the detail page.  Usually this is for "status" type commands, so
-    service status can be determined quickly.
     """
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
 
@@ -52,26 +57,48 @@ class Command(models.Model):
         help_text='Name of the service command')
     command = models.CharField(max_length=255,
         help_text='The actual command to run')
+    background = models.BooleanField(default=False,
+        help_text="Runs process in background and returns immediately, instead of waiting for it to exit.")
 
-    autorun = models.BooleanField(default=False,
-        help_text="Determines if the command should run automatically when visiting the service detail page.  Note: this overrides Service Change permission!")
 
     @cached_property
     def run(self):
-        env = os.environ.copy()
+        # split the command into argument list for popen
+        split_cmd = shlex.split(self.command)
+
+        # build a variable subst. list
+        subst = {}
         if self.service.pidfile:
-            env['PIDFILE']=self.service.pidfile
+            subst['$PIDFILE'] = self.service.pidfile
             try:
                 with open(self.service.pidfile, 'r') as f:
-                    env['PID']=f.read()
-            except FileNotFoundError:
-                pass
+                    subst['$PID'] = f.read()
+            except FileNotFoundError as e:
+                    subst['$PID'] = (-1, str(e))
 
-        result = run(shlex.split(self.command), stdout=PIPE, stderr=STDOUT, env=env)
-        return (result.returncode, result.stdout.decode())
+        # perform substitutions
+        subst_cmd = []
+        for arg in split_cmd:
+            if arg in subst:
+                if type(subst[arg]) is tuple:
+                    # refers to invalid substitution, print error and return
+                    return subst[arg]
+                subst_cmd.append(subst[arg])
+            else:
+                subst_cmd.append(arg)
+
+        if self.background:
+            result = run(subst_cmd)
+            return (result.returncode, '')
+        else:
+            result = run(subst_cmd, stdout=PIPE, stderr=STDOUT)
+            return (result.returncode, result.stdout.decode())
 
     class Meta:
         unique_together = [['service', 'name']]
+
+    def __str__(self):
+        return '%s %s' % (self.service.name, self.name)
 
 class File(models.Model):
     """
@@ -107,4 +134,3 @@ class File(models.Model):
 
     class Meta:
         unique_together = [['service', 'name']]
-
