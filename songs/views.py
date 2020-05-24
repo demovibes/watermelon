@@ -2,7 +2,6 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.forms import Form, ValidationError
 from django.urls import reverse
 from django.views import View
-from django.views.generic import FormView
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import CreateView, FormView
 from django.views.generic.list import ListView
@@ -130,7 +129,7 @@ class SongMetaCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'songs.create_songmeta'
     model = SongMeta
 
-    fields = [ 'name', 'artist', 'release_date', 'info', 'path', ]
+    fields = [ 'name', 'artist', 'release_date', 'info', 'filepath', ]
 
     # the get and post must retrieve the ARTIST base, not ARTIST META.
     def get_initial(self):

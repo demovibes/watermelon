@@ -1,5 +1,6 @@
-from .models import Message
 from .forms import ChatForm
+from .models import Message
+
 
 def chat_recent(request):
     return {

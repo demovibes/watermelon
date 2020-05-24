@@ -34,7 +34,7 @@
             <li class="tagcloud"><a href="/demovibes/tags/">Tag cloud</a>
         <li class="statistics"><a href="/demovibes/statistics/">Statistics</a> -->
             <li>&nbsp;
-            <li class="playlist"><a href="{% url 'entry-list-view' %}">Playlist</a>
+            <li class="playlist"><a href="{% url 'playlist:entry-list' %}">Playlist</a>
             <li>&nbsp;
 {% if perms.backend.view_service %}<li class="service"><a href="{% url 'backend:service-list' %}">Service List</a>{% endif %}
 <!--            <li class="search"><a href="/search/">Search</a>
@@ -101,7 +101,7 @@ Chat would go here.
 {% block content %}
           some links:
           <p><b><a href="{% url 'player-view' %}" target="_blank">listen now</a></b>
-          <p><a href="{% url 'entry-list-view' %}">playlist</a>
+          <p><a href="{% url 'playlist:entry-list' %}">playlist</a>
           <hr>
           user mgmt:
           {% if user.is_authenticated %}

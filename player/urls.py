@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import StreamListView, StreamDetailView, PlayerView
+
+from .views import PlayerView, StreamDetailView, StreamListView
 
 urlpatterns = [
     path('stream/', StreamListView.as_view(), name='stream-list-view'),

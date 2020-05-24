@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Message(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE,
         help_text="User who posted the message")

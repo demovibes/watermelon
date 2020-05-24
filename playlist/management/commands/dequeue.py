@@ -1,5 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
+
 from playlist.models import Entry
+
 
 class Command(BaseCommand):
     help = 'Removes the top item from the queue, and returns its song ID.  If no requests exist, a random item is queued.'

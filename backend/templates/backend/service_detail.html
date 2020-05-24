@@ -14,14 +14,14 @@ Service - {{ object.name }}{% if perms.backend.change_service %} [<a href="{% ur
   <dt>Service Description</dt><dd>{{ object.description }}</dd>
 </dl>
 <hr>
-{% for command in object.command_set.all %}{% if command.autorun %}
+{% if object.autorun_command %}
 <dl>
-  <dt>Command</dt><dd>{{ command.name }}</dd>
-  <dt>Return Code</dt><dd>{{ command.run.0 }}</dd>
-  <dt>Output</dt><dd><pre>{{ command.run.1 }}</pre></dd>
+  <dt>Command</dt><dd>{{ object.autorun_command.name }}</dd>
+  <dt>Return Code</dt><dd>{{ object.autorun_command.run.0 }}</dd>
+  <dt>Output</dt><dd><pre>{{ object.autorun_command.run.1 }}</pre></dd>
 </dl>
 <hr>
-{% endif %}{% endfor %}
+{% endif %}
 <form action="{% url 'backend:service-detail' object.pk %}" method="post">
 {% csrf_token %}
 {% if perms.backend.change_service %}{% for command in object.command_set.all %}

@@ -11,12 +11,14 @@ Service List
 {% block content %}
 <table>
 <tr>
+  <th>Status</th>
   <th>Service Name</th>
   <th>Service Description</th>
   <th>Service Detail</th>
 </tr>
 {% for object in object_list %}
 <tr>
+    <td class="status-{% if object.autorun_command.run.0 == 0 %}normal{% else %}error{% endif %}">Code: {{ object.autorun_command.run.0 }}</td>
     <td>{{ object.name }}</td>
     <td>{{ object.description }}</td>
     <td><a href="{% url 'backend:service-detail' object.pk %}">Detail Page</a></td>

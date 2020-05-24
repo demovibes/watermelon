@@ -32,13 +32,8 @@
         <input>
             <module>playlist</module>
             <param name="type">script</param>
-            <param name="file">link-ices.py</param>
-            <!-- random play -->
-            <param name="random">0</param>
-            <!-- if the playlist get updated that start at the beginning -->
-            <param name="restart-after-reread">0</param>
-            <!-- if set to 1 , plays once through, then exits. -->
-            <param name="once">0</param>
+            <param name="program">ices-ogg-only.py</param>
+            <param name="allow-repeats">1</param>
         </input>
 
         <!-- Stream instance

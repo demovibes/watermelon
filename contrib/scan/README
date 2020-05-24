@@ -1,0 +1,11 @@
+This folder contains Python wrappers for various audio file scan tools.
+
+A scan tool should be a Python script with a single function, scan(file), which
+calls the correct tool and returns a dict of file information.
+
+In addition the tools should have a "command-line" mode, where they can be
+launched from CLI with one parameter (file path), call scan and pprint the
+result.
+
+watermelon needs a scan tool defined in core settings to parse uploaded files
+and get important info from them.

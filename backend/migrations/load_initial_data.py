@@ -1,6 +1,5 @@
 # Load data from initial_data.json
 
-from django.core.management import call_command
 from django.db import migrations
 
 
@@ -49,9 +48,17 @@ def forwards_func(apps, schema_editor):
 
         # add the commands to it
         for service_command in commands:
+            # if autorun, we want to link this ID back on the main service.
+            try:
+                autorun = service_command.pop('autorun')
+            except KeyError:
+                autorun = False
             command = Command(**service_command)
             command.service = service
             command.save(using=db_alias)
+            if autorun:
+                service.autorun_command = command
+                service.save(using=db_alias)
 
         for service_file in files:
             file = File(**service_file)

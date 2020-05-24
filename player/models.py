@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Stream(models.Model):
     url = models.URLField(unique=True, max_length=200,
         help_text='URL of the stream')

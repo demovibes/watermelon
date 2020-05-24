@@ -1,8 +1,9 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.views.generic.list import ListView
 from django.views import View
+from django.views.generic.list import ListView
 
 from .models import Message
+
 
 class MessageListView(ListView):
     model = Message
