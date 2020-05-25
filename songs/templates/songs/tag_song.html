@@ -1,1 +1,1 @@
-<a href="{% url 'songs:song-detail' object.pk %}" class="song">{{ object.name }}</a>
+{% if name %}{% if song_id %}<a href="{% url 'songs:song-detail' song_id %}" class="song">{{ name }}</a>{% else %}<span class="song">{{ name }}</span>{% endif %}{% endif %}

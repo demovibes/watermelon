@@ -6,18 +6,18 @@ from .models import Stream
 
 
 # General index page for a Streams request
-class StreamListView(ListView):
+class StreamList(ListView):
     model = Stream
 
 # Specific page of a stream
-class StreamDetailView(DetailView):
+class StreamDetail(DetailView):
     model = Stream
 
 # Player page
 #  Returns streams filtered by active,
 #  and a "selected" id based on URL parameter
 #  or randomly chosen otherwise
-class PlayerView(TemplateView):
+class Player(TemplateView):
     template_name = "player/player.html"
 
     def get_context_data(self, **kwargs):

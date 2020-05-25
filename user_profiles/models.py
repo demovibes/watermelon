@@ -23,6 +23,9 @@ class Profile(models.Model):
     birth_date = models.DateField(null=True, blank=True,
         help_text="User's birthday")
 
+    theme = models.FilePathField(max_length=255, blank=True, path='css/theme', match='\.css$',
+        help_text="Custom theme - choice of CSS files in css/theme directory")
+
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse('user_profiles:profile-detail', kwargs={'slug': self.user.username})

@@ -14,7 +14,7 @@
 <tr>
     <td>{{ object.url }}</td>
     <td>{{ object.description }}</td>
-    <td><a href="{% url 'stream-detail-view' object.pk %}">Detail Page</a></td>
+    <td><a href="{% url 'player:stream-detail' object.pk %}">Detail Page</a></td>
 </tr>
 {% endfor %}
 </table>

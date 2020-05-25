@@ -16,7 +16,7 @@ Song - {{ object.name }}{% if perms.songs.change_song %} [<a href="{% url 'admin
     <dl>
       <dt>Name</dt><dd><b>{{ object.name }}</b></dd>
       <dt>Artists</dt><dd>{% for artist in object.artist.all %}{% artist artist.pk %}{% endfor %}</dd>
-      <dt>Duration</dt><dd>{{ object.duration }}</dd>
+      <dt>Duration</dt><dd>{% duration object.duration %}</dd>
       <dt>Release Date</dt><dd>{{ object.release_date|localize }}</dd>
       <dt>Filesize</dt><dd>{{ object.filepath.size|filesizeformat }}</dd>
       <dt>Format</dt><dd>{{ object.file_type }}</dd>
@@ -32,7 +32,7 @@ Song - {{ object.name }}{% if perms.songs.change_song %} [<a href="{% url 'admin
   {% if song.available %}
     <a href="{% url 'playlist:entry-add' object.pk %}">Queue song!</a>
   {% else %}
-    <b>Song is currently locked, and will be available {{ song.locked_until }}.</b>
+    <b>Song is currently locked, and will be available {{ song.locked_until }}</b>
   {% endif %}
 {% endif %}
   </div>

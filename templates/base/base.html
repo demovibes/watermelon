@@ -7,63 +7,31 @@
     <title>{{ settings.site_name }} - {% block title %}Welcome{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% if user.profile.theme %}<link rel="stylesheet" href="{% static user.profile.theme %}">{% endif %}
+    <script src="{% static 'js/script.js' %}"></script>
   </head>
   <body>
-    <div id="header">
-      <h1><a href="/">{{ settings.site_name }}</a></h1>
-    </div>
     <div id="main">
       <div id="left-sidebar" class="column">
-{% block left-sidebar %}
         <div id="sitemenu">
-          <h3>Welcome, {% if user.is_authenticated %}{{ user.get_username }}{% else %}visitor{% endif %}!</h3>
+          <h2>Welcome, {% if user.is_authenticated %}{{ user.get_username }}{% else %}visitor{% endif %}!</h2>
+          <h3>Site Menu</h3>
           <ul class="menulist">
             <li class="home"><a href="{% url 'index' %}">Home</a>
-<!--            <li class="forum"><a href="/forum/">Forum</a> -->
             <li class="song"><a href="{% url 'songs:song-list' %}">Songs</a>
 {% if perms.songs.view_songmeta %}<ul><li><a href="{% url 'songs:songmeta-list' %}">Pending Metadata</a></ul>{% endif %}
-<!--            <li class="song-source"><a href="/demovibes/sources/">Sources</a>
-            <li class="song-platform"><a href="/demovibes/platforms/">Platforms</a> -->
             <li class="artist"><a href="{% url 'artists:artist-list' %}">Artists</a>
 {% if perms.artists.view_artistmeta %}<ul><li><a href="{% url 'artists:artistmeta-list' %}">Pending Metadata</a></ul>{% endif %}
-<!--            <li class="groups"><a href="/demovibes/groups/">Groups</a>
-            <li class="labels"><a href="/demovibes/labels/">Labels</a>
-            <li class="compilations"><a href="/demovibes/compilations/">Compilations</a>
-            <li class="screenshots"><a href="/demovibes/screenshots/">Images</a>
-            <li class="licenses"><a href="/demovibes/licenses/">Licenses</a>
-            <li class="tagcloud"><a href="/demovibes/tags/">Tag cloud</a>
-        <li class="statistics"><a href="/demovibes/statistics/">Statistics</a> -->
             <li>&nbsp;
             <li class="playlist"><a href="{% url 'playlist:entry-list' %}">Playlist</a>
             <li>&nbsp;
 {% if perms.backend.view_service %}<li class="service"><a href="{% url 'backend:service-list' %}">Service List</a>{% endif %}
-<!--            <li class="search"><a href="/search/">Search</a>
-            <li class="recent"><a href="/demovibes/recent/">New Uploads</a>
-            <li class="recentchanges"><a href="/demovibes/updates/">Recent Updates</a>
-            <li>&nbsp;
-            <li class="faq"><a href="/demovibes/faq/">FAQ</a>
-            <li class="links"><a href="/demovibes/links/">Links</a>
-            <li class="chat"><a href="/demovibes/chat/">Simple Chat</a> -->
           </ul>
         </div>
         <div id="chatbox-small">
           <h3>Site Chat</h3>
 {% if user.is_authenticated %}
-Chat would go here.
-{% comment %}
-           <form action="javascript:chat_post()" method="POST">
-            {% csrf_token %}
-            {{ form }}
-            <input type="submit">
-          </form>
-{% for message in messages %}
-          <p class="chat-message">
-            <span class="username">{{ message.user }}</span><span class="chat-message-time">{{ message.time }}</span>
-            <br>
-            <span class="chat-message-text">{{ message.text }}</span>
-          </p>
-{% endfor %}
-{% endcomment %}
+          Chat would go here.
 {% else %}
           <b>You must be logged in to view site chat.</b>
 {% endif %}
@@ -79,19 +47,20 @@ Chat would go here.
           <h3>Our Newest User:</h3>
           {% user 'DJRandom' %}
         </div>
-{% endblock %}
       </div>
+
       <div id="content" class="column">
+        <div id="header">
+          <h1><a href="/">{{ settings.site_name }}</a></h1>
+        </div>
 {% block messages %}
 {% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|linebreaks }}</li>
-    {% endfor %}
-</ul>
+        <h3>Messages:</h3>
+        <ul class="messages">{% for message in messages %}
+           <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|linebreaks }}</li>
+        {% endfor %}</ul>
 {% endif %}
 {% endblock messages %}
-
         <div id="content-header">
 {% block content_header %}
           welcome to {{ settings.site_name }}
@@ -100,7 +69,7 @@ Chat would go here.
         <div id="content-main">
 {% block content %}
           some links:
-          <p><b><a href="{% url 'player-view' %}" target="_blank">listen now</a></b>
+          <p><b><a href="{% url 'player:player' %}" target="_blank">listen now</a></b>
           <p><a href="{% url 'playlist:entry-list' %}">playlist</a>
           <hr>
           user mgmt:
@@ -112,48 +81,21 @@ Chat would go here.
           <ul>
           <li><a href="{% url 'artists:artist-list' %}">artists</a>
           <li><a href="{% url 'songs:song-list' %}">songs</a>
-          <li><a href="{% url 'stream-list-view' %}">streams</a>
+          <li><a href="{% url 'player:stream-list' %}">streams</a>
           <li><a href="{% url 'user_profiles:profile-list' %}">user-profiles</a>
           </ul>
 {% endblock %}
         </div>
       </div>
+
       <div id="right-sidebar" class="column">
-{% block right-sidebar %}
         <div id="usermenu">
         <h3>User Menu</h3>
         <ul class="menulist">
 {% if user.is_authenticated %}
-          <li id="profile"><a href="/demovibes/user/">Edit My Profile</a>
-          <li id="favorites"><a href="/demovibes/favorites/">My Favourites</a>
-          <li id="inbox"><a href="/demovibes/inbox/">My Inbox</a>
           <li id="logout"><a href="{% url 'logout' %}">Log Me Out</a>
 
-          <li id="admin"><a href="/admin" target="admin">Admin Area</a>
-          <li id="menuqueue"><a href="/demovibes/uploaded_songs/">Unapproved Uploads</a>
-          <li id="menumute"><a href="/demovibes/oneliner/mute/">Mute account</a>
-
-
-          <li>
-
-          <li id="unap-artists"><a href="/demovibes/new_artists/">Pending Artists</a>
-
-
-          <li id="unap-groups"><a href="/demovibes/new_groups/">Pending Groups</a>
-
-
-          <li id="unap-compilations"><a href="/demovibes/new_compilations/">Pending Compilations</a>
-
-
-          <li id="unap-labels"><a href="/demovibes/new_labels/">Pending Labels</a>
-
-
-          <li id="unap-screenshots"><a href="/demovibes/new_screenshots/">Pending Screenshots</a>
-
-
-          <li id="unap-links"><a href="/demovibes/link/pending/">Pending Links</a>
-
-          <li id="unap-nju"><a href="/demovibes/newshit/">New info</a>
+          {% if user.is_staff %}<li id="admin"><a href="/admin" target="admin">Staff Area</a>{% endif %}
 {% else %}
           <li id="login"><a href="{% url 'login' %}">Log In / Register</a>
 {% endif %}
@@ -161,16 +103,16 @@ Chat would go here.
         </div>
         <div id="nowplaying">
           <h3>Currently Playing</h3>
-          {% song '1' %}
+          {% song now_playing.song.pk %}
           <br />
-          Requested By: {% user 'DJRandom' %}
+          Requested By: {% user now_playing.user.username %}
           <br />
-          <p>Time Left: <span data-name="counter" data-sec="18" data-inc="-1">5:21</span></p>
-            <input type="button" style="border: 1px solid; border-color: #333;" value="Listen" onclick="window.open('/demovibes/play/','player','width=340,height=25,toolbar=no,scrollbars=no,resizable=no,location=no,directories=no,status=no,menubar=no,copyhistory=no')" /> - <a href="/demovibes/streams/">Streams</a>
+          <p>Time Left: <span id="countdown">{% duration now_playing_duration %}</span></p>
+          <p><b><a href="{% url 'player:player' %}" target="_blank">Listen Now!</a></b>
+          <p><a href="{% url 'player:stream-list' %}">Streams List</a>
         </div>
         <div id="sidebarnews">
         </div>
-{% endblock %}
       </div>
     </div>
     <div id="footer">
