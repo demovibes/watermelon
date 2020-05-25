@@ -1,10 +1,12 @@
 from django.urls import path
 
-from .views import PlayerView, StreamDetailView, StreamListView
+from .views import Player, StreamDetail, StreamList
+
+app_name = 'player'
 
 urlpatterns = [
-    path('stream/', StreamListView.as_view(), name='stream-list-view'),
-    path('stream/<int:pk>/', StreamDetailView.as_view(), name='stream-detail-view'),
+    path('stream/<int:pk>/', StreamDetail.as_view(), name='stream-detail'),
+    path('stream/', StreamList.as_view(), name='stream-list'),
 
-    path('player/', PlayerView.as_view(), name='player-view'),
+    path('player/', Player.as_view(), name='player'),
 ]

@@ -1,1 +1,1 @@
-<a href="{% url 'user_profiles:profile-detail' username %}" class="user {{ type|safe }}">{{ username }}</a>
+{% if username %}{% if type != 'none' %}<a href="{% url 'user_profiles:profile-detail' username %}" class="user {{ type|safe }}">{{ username }}</a>{% else %}<span class="user none">{{ username }}</span>{% endif %}{% endif %}
