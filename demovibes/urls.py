@@ -33,6 +33,9 @@ urlpatterns = [
     path('backend/', include('backend.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 
+    # events
+    path('events/', include('events.urls')),
+
     # admin documentation and main site
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),

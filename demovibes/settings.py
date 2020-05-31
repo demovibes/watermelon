@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     #  also contains 'common' abstract models etc
     'core.apps.CoreConfig',
 
+    # events system
+    'events.apps.EventsConfig',
+
     # Backend control pages
     'backend.apps.BackendConfig',
 
