@@ -103,9 +103,9 @@
         </div>
         <div id="nowplaying">
           <h3>Currently Playing</h3>
-          {% song now_playing.song.pk %}
+          {% song now_playing.song.pk 'now-playing-song' %}
           <br />
-          Requested By: {% user now_playing.user.username %}
+          Requested By: {% user now_playing.user.username 'now-playing-user' %}
           <br />
           <p>Time Left: <span id="countdown">{% duration now_playing_duration %}</span></p>
           <p><b><a href="{% url 'player:player' %}" target="_blank">Listen Now!</a></b>

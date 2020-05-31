@@ -17,7 +17,7 @@ def get_initial_services():
       },
       { 'name': 'IceS', 'description': 'Icecast source client', 'pidfile': '/var/run/ices.pid', 'command': [
           { 'name': 'status', 'command': 'kill -0 $PID', 'autorun': True },
-          { 'name': 'start', 'command': '/usr/local/bin/ices /usr/local/etc/ices.xml' },
+          { 'name': 'start', 'command': '/usr/local/bin/ices /usr/local/etc/ices.xml', 'background': True },
           { 'name': 'stop', 'command': 'kill -INT $PID' },
           { 'name': 'next', 'command': 'kill -HUP $PID' },
           { 'name': 'sync', 'command': 'kill -USR1 $PID' },

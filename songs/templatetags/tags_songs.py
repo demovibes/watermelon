@@ -19,7 +19,7 @@ def duration( duration ):
     return duration
 
 @register.inclusion_tag('songs/tag_song.html')
-def song(song_id):
+def song(song_id, song_link_id = None):
     """
     Display a Song ID as a link and CSS class.
 
@@ -32,6 +32,6 @@ def song(song_id):
     if song_id:
         try:
             object = Song.objects.get(pk=song_id, is_active=True)
-            return { 'song_id': object.pk, 'name': object.name, }
+            return { 'song_id': object.pk, 'name': object.name, 'song_link_id': song_link_id, }
         except Song.DoesNotExist:
-            return { 'name': song_id, }
+            return { 'name': song_id, 'song_link_id': song_link_id, }
