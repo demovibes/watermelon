@@ -1,5 +1,6 @@
 {% load static %}
 {% load tags_user_profiles %}
+{% load tags_artists %}
 {% load tags_songs %}
 <!DOCTYPE html>
 <html lang="en">
@@ -104,6 +105,7 @@
         <div id="nowplaying">
           <h3>Currently Playing</h3>
           {% song now_playing.song.pk 'now-playing-song' %}
+          <br />by <span id="now-playing-artist">{% for artist in now_playing.song.artist.all %}{% artist artist.pk %}{% endfor %}</span>
           <br />
           Requested By: {% user now_playing.user.username 'now-playing-user' %}
           <br />

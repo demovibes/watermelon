@@ -53,8 +53,12 @@ event_info = {
     "username": object.user.username,
     "userlink": reverse('user_profiles:profile-detail', kwargs={'slug':object.user.username}),
     "duration": object.song.duration.total_seconds(),
-    #"artists": song.artist_set
+    "artists": []
 }
+
+# add artists
+for artist in object.song.artist.all():
+    event_info['artists'].append({'name': artist.name, 'link': reverse('artists:artist-detail', kwargs={'pk': artist.pk}) })
 
 # add event to the Event table
 event = Event(audience_type=Event.ALL, event_type="PLAYLIST", event_value=json.dumps(event_info))

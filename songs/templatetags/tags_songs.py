@@ -13,7 +13,7 @@ def duration( duration ):
     """
     if duration:
         if isinstance( duration, timedelta ):
-            seconds = round(duration.total_seconds())
+            seconds = max(round(duration.total_seconds()), 0)
             return "{:d}:{:02d}".format( seconds // 60, seconds % 60 )
     # just give up and pass back the value
     return duration

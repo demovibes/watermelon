@@ -8,9 +8,15 @@ class Event(models.Model):
     other models that want to broadcast to the users will save a new Event object.
     '''
     USER = 1
+    SUPERUSER = 16
+    STAFF = 32
+    AUTHENTICATED = 64
     ALL = 128
     AUDIENCE_CHOICES = (
         (USER, 'User'),
+        (SUPERUSER, 'Superusers'),
+        (STAFF, 'Staff'),
+        (AUTHENTICATED, 'Authenticated Users'),
         (ALL, 'All'),
     )
 
