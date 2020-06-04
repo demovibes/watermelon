@@ -1,1 +1,1 @@
-{% if name %}{% if song_id %}<a href="{% url 'songs:song-detail' song_id %}" class="song"{% if song_link_id %} id='{{song_link_id}}'{% endif %}>{{ name }}</a>{% else %}<span class="song">{{ name }}</span>{% endif %}{% endif %}
+{% if name %}{% if song_id %}<a href="{% url 'songs:song-detail' song_id %}" class="song"{% if song_link_id %} id='{{song_link_id}}'{% endif %}>{{ name }}</a>{% else %}<span class="song"{% if song_link_id %} id='{{song_link_id}}'{% endif %}>{{ name }}</span>{% endif %}{% endif %}
