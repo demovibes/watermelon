@@ -8,12 +8,15 @@ and if none are waiting, it queues a random unlocked song instead.
 Filename is printed to command line for IceS to read.
 """
 
-# The ordor of imports is IMPORTANT!  Django cannot be started without
+# The order of imports is IMPORTANT!  Django cannot be started without
 #  a DJANGO_SETTINGS_MODULE, and the other imports are no good until
 #  django.setup() is called.
 import sys
 from os import environ
 import json
+
+from tempfile import NamedTemporaryFile
+import sox
 
 sys.path.append('/home/grkenn/src/watermelon')
 environ.setdefault('DJANGO_SETTINGS_MODULE', 'demovibes.settings')
@@ -42,6 +45,15 @@ if object == None:
 
 source_file = object.song.song_file.filepath.path
 
+# now for the tricky part
+# get a temp file
+with NamedTemporaryFile(suffix='.ogg', delete=False) as f:
+    tempfile = f.name
+
+#  re-encode the file to .ogg
+tfm = sox.Transformer()
+tfm.build_file(source_file, tempfile)
+
 # mark object as "played" and save
 object.time_play = now()
 object.save()
@@ -65,4 +77,4 @@ event = Event(audience_type=Event.ALL, event_type="PLAYLIST", event_value=json.d
 event.save()
 
 # pass filename to ices
-print(source_file)
+print(tempfile)

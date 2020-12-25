@@ -18,11 +18,11 @@ Song - {{ object.name }}{% if perms.songs.change_song %} [<a href="{% url 'admin
       <dt>Artists</dt><dd>{% for artist in object.artist.all %}{% artist artist.pk %}{% endfor %}</dd>
       <dt>Duration</dt><dd>{% duration object.duration %}</dd>
       <dt>Release Date</dt><dd>{{ object.release_date|localize }}</dd>
-      <dt>Filesize</dt><dd>{{ object.filepath.size|filesizeformat }}</dd>
-      <dt>Format</dt><dd>{{ object.file_type }}</dd>
-      <dt>Channels</dt><dd>{{ object.channels }}</dd>
-      <dt>Sample Rate</dt><dd>{{ object.sample_rate }}</dd>
-      <dt>Bit Rate</dt><dd>{{ object.bit_rate }}</dd>
+      <dt>Filesize</dt><dd>{{ object.song_file.filepath.size|filesizeformat }}</dd>
+      <dt>Format</dt><dd>{{ object.song_file.file_type }}</dd>
+      <dt>Channels</dt><dd>{{ object.song_file.channels }}</dd>
+      <dt>Sample Rate</dt><dd>{{ object.song_file.sample_rate }}</dd>
+      <dt>Bit Rate</dt><dd>{{ object.song_file.bit_rate }}</dd>
       <dt>Date Created</dt><dd>{{ object.time_create|localize }}</dd>
       {% if object.time_modify %}<dt>Last Modified</dt><dd>{{ object.time_modify|localize }}</dd>{% endif %}
     </dl>

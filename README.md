@@ -15,8 +15,8 @@ Django 2.2.
     From the root watermelon/ folder, run:
     `python -m venv .venv`
     This will create a virtual environment within `.venv/`, containing copies of
-    your Python system, as well as a version of `pip` that can be used to install
-    additional dependencies.
+    your Python system, as well as a version of `pip` that can be used to
+    install additional dependencies.
 
 2. Activate your new virtual environment.  This sets path variables so that the
     packages in your v.env are preferred over the system-wide ones.

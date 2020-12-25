@@ -29,14 +29,23 @@ def scan(filepath):
 
     # bitrate is currently broken (1.37) but we can fake it
     info_dictionary['bit_rate'] = round(getsize(filepath) / info_dictionary['duration'] * 8)
+
+    # get comments too
+    comments = file_info.comments(filepath).splitlines()
+    if comments:
+        info_dictionary['tags'] = {}
+        for comment in comments:
+            key, value = comment.strip().split('=', 1)
+            info_dictionary['tags'][key.lower()] = value
+
     return info_dictionary
 
 if __name__ == '__main__':
-    import argparse
+    from argparse import ArgumentParser
     from pprint import pprint
 
     # service.py executed as script
-    parser = argparse.ArgumentParser(description='Call soxi and get meta info back.')
+    parser = ArgumentParser(description='Call soxi and get meta info back.')
     parser.add_argument('file')
 
     args = parser.parse_args()
