@@ -9,6 +9,6 @@ def now_playing(request):
     if entry:
         return {
             'now_playing': entry,
-            'now_playing_duration': entry.time_play + entry.song.duration - timezone.now()
+            'now_playing_duration': entry.time_play + entry.song.song_file.duration - timezone.now()
         }
     return {}

@@ -129,7 +129,7 @@ class SongMetaCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'songs.create_songmeta'
     model = SongMeta
 
-    fields = [ 'name', 'artist', 'release_date', 'info', 'filepath', ]
+    fields = [ 'name', 'artist', 'release_date', 'info', ]
 
     # the get and post must retrieve the ARTIST base, not ARTIST META.
     def get_initial(self):

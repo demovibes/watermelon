@@ -1,3 +1,6 @@
+from re import sub
+from os.path import basename
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
@@ -8,13 +11,42 @@ from core.models import AutoCreateModify
 
 from .fields import AudioField
 
+def upload_to(instance, filename):
+    # files are stored in a bucket 2 levels deep, based on name field
+    base = basename(filename)
+    firstchars = sub('[^0-9a-z_]', '_', base[:2].lower())
+    # at least make sure the filename is 2 chars long
+    while len(firstchars) < 2:
+        firstchars += '_'
+    return 'songs/{0:.1}/{0}/{1}'.format(firstchars, base)
 
-def id_bucket_path(instance, filename):
-    # files are stored in a bucket of up to 250 entries, keyed by song ID
-    #  if you change this function, your new uploads will be all over the place...
-    bucket_size=250
-    bucket = instance.song.pk // bucket_size
-    return 'songs/{0:05d}-{1:05d}/{2:05d}_-_{3:s}'.format(bucket_size*bucket, bucket_size*(bucket+1) - 1, instance.song.pk, filename)
+class SongFile(AutoCreateModify):
+    """
+    SongFile is a container for a song on disk.
+    It uses the custom AudioField and has placeholders for all info.
+    """
+    filepath = AudioField(upload_to=upload_to, unique=True,
+        file_type_field='file_type', sample_rate_field='sample_rate',
+        channels_field='channels', duration_field='duration',
+        bit_rate_field='bit_rate',
+        help_text='Local path to file on server')
+
+    # Info about the file
+    file_type = models.CharField(max_length=255, editable=False,
+        help_text='Format or codec of the uploaded file')
+    sample_rate = models.PositiveIntegerField(editable=False,
+        help_text='Sample rate (in hz) of the file')
+    channels = models.PositiveSmallIntegerField(editable=False,
+        help_text='Sound channels (mono, stereo, etc)')
+    duration = models.DurationField(editable=False,
+        help_text='Length of the song')
+    bit_rate = models.PositiveIntegerField(editable=False,
+        help_text='Approximate bit rate of the song, in bits per second')
+    hash = models.BinaryField(max_length=20, unique=True,
+        help_text='SHA-1 checksum of file contents')
+
+    def __str__(self):
+        return self.filepath.path
 
 class SongBase(AutoCreateModify):
     """
@@ -38,26 +70,8 @@ class SongBase(AutoCreateModify):
         help_text='Additional information about this song')
 
     # The uploaded file.
-    filepath = AudioField(upload_to=id_bucket_path, unique=True,
-        file_type_field='file_type', sample_rate_field='sample_rate',
-        channels_field='channels', duration_field='duration',
-        bit_rate_field='bit_rate',
-        help_text='Local path to file on server')
-
-    # Info about the file
-    file_type = models.CharField(max_length=255, editable=False,
-        help_text='Format or codec of the uploaded file')
-    sample_rate = models.PositiveIntegerField(editable=False,
-        help_text='Sample rate (in hz) of the file')
-    channels = models.PositiveSmallIntegerField(editable=False,
-        help_text='Sound channels (mono, stereo, etc)')
-    duration = models.DurationField(editable=False,
-        help_text='Length of the song')
-    bit_rate = models.PositiveIntegerField(editable=False,
-        help_text='Approximate bit rate of the song, in bits per second')
-#    checksum must wait: there is no good container for it :(
-#    checksum = models.BinaryField(length=32, unique=True,
-#        help_text='SHA-256 checksum of file contents')
+    song_file = models.ForeignKey(SongFile, on_delete=models.CASCADE,
+        help_text='Audio file associated with this Song')
 
     class Meta:
         abstract = True

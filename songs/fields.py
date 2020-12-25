@@ -1,77 +1,11 @@
-import importlib
-import os
-import sys
 from datetime import timedelta
-from tempfile import NamedTemporaryFile
 
 from django import forms
-from django.core.files import File
 from django.db.models import signals
 from django.db.models.fields.files import FieldFile, FileDescriptor, FileField
 
+from .audios import AudioFile
 
-class AudioFile(File):
-    """
-    A mixin for use alongside django.core.files.base.File, which provides
-    additional features for dealing with audios.
-    """
-    @property
-    def file_type(self):
-        return self._get_audio_fileinfo().get('file_type')
-    @property
-    def sample_rate(self):
-        return self._get_audio_fileinfo().get('sample_rate')
-    @property
-    def channels(self):
-        return self._get_audio_fileinfo().get('channels')
-    @property
-    def duration(self):
-        return self._get_audio_fileinfo().get('duration')
-    @property
-    def bit_rate(self):
-        return self._get_audio_fileinfo().get('bit_rate')
-    @property
-    def encoding(self):
-        return self._get_audio_fileinfo().get('encoding')
-
-    def _get_audio_fileinfo(self):
-        if not hasattr(self, '_fileinfo_cache'):
-            if self.path and os.path.exists(self.path):
-                self._fileinfo_cache = get_audio_fileinfo(self.path)
-            elif not self.closed:
-                # we don't have a filepath BUT we have an open file,
-                #  can simply dump it to tempfile
-                # save the current file pos
-                file_pos = self.tell()
-                self.seek(0)
-                _, file_extension = os.path.splitext(self.name)
-                with NamedTemporaryFile(suffix=file_extension) as temp:
-                    temp.write(self.read())
-                    self._fileinfo_cache = get_audio_fileinfo(temp.name)
-                self.seek(file_pos)
-            else:
-                raise ValueError("The file cannot be reopened.")
-        return self._fileinfo_cache
-
-def get_audio_fileinfo(path):
-    """
-    Return the (fileinfo) of an audio, given an open file or a path.  Set
-    'close' to True to close the file at the end if it is initially in an open
-    state.
-    """
-    from core.models import Setting
-
-    spec = importlib.util.spec_from_file_location('scan_tool', Setting.objects.get(key='scan_tool').value)
-    scan_tool = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = scan_tool
-    spec.loader.exec_module(scan_tool)
-
-    try:
-        ret = scan_tool.scan(path)
-    except Exception as e:
-        raise ValueError("Failed to parse uploaded file: %s" % str(e))
-
-    return ret
 
 class AudioFileDescriptor(FileDescriptor):
     """
@@ -105,13 +39,14 @@ class AudioField(FileField):
     def __init__(self, verbose_name=None, name=None,
       file_type_field=None, sample_rate_field=None, channels_field=None,
       duration_field=None, bit_rate_field=None, encoding_field=None,
-      **kwargs):
+      hash_field=None, **kwargs):
         self.file_type_field = file_type_field
         self.sample_rate_field = sample_rate_field
         self.channels_field = channels_field
         self.duration_field = duration_field
         self.bit_rate_field = bit_rate_field
         self.encoding_field = encoding_field
+        self.hash_field = hash_field
         super().__init__(verbose_name, name, **kwargs)
 
     def check(self, **kwargs):
@@ -133,6 +68,8 @@ class AudioField(FileField):
             kwargs['bit_rate_field'] = self.bit_rate_field
         if self.encoding_field:
             kwargs['encoding_field'] = self.encoding_field
+        if self.hash_field:
+            kwargs['hash_field'] = self.hash_field
         return name, path, args, kwargs
 
     def contribute_to_class(self, cls, name, **kwargs):
@@ -150,7 +87,7 @@ class AudioField(FileField):
         """
         # Nothing to update if the field doesn't have fileinfo fields or if
         # the field is deferred.
-        has_fileinfo_fields = self.file_type_field or self.sample_rate_field or self.channels_field or self.duration_field or self.bit_rate_field or self.encoding_field
+        has_fileinfo_fields = self.file_type_field or self.sample_rate_field or self.channels_field or self.duration_field or self.bit_rate_field or self.encoding_field or self.hash_field
         if not has_fileinfo_fields or self.attname not in instance.__dict__:
             return
 
@@ -169,7 +106,8 @@ class AudioField(FileField):
             (self.channels_field and not getattr(instance, self.channels_field)) or
             (self.duration_field and not getattr(instance, self.duration_field)) or
             (self.bit_rate_field and not getattr(instance, self.bit_rate_field)) or
-            (self.encoding_field and not getattr(instance, self.encoding_field))
+            (self.encoding_field and not getattr(instance, self.encoding_field)) or
+            (self.hash_field and not getattr(instance, self.hash_field))
         )
         # When both fileinfo fields have values, we are most likely loading
         # data from the database or updating an audio field that already had
@@ -189,6 +127,7 @@ class AudioField(FileField):
             duration = file.duration
             bit_rate = file.bit_rate
             encoding = file.encoding
+            hash = file.hash
         else:
             # No file, so clear fileinfo fields.
             file_type = None
@@ -197,6 +136,7 @@ class AudioField(FileField):
             duration = None
             bit_rate = None
             encoding = None
+            hash = None
 
         # Update the metadata fields.
         if self.file_type_field:
@@ -211,6 +151,8 @@ class AudioField(FileField):
             setattr(instance, self.bit_rate_field, bit_rate)
         if self.encoding_field:
             setattr(instance, self.encoding_field, encoding)
+        if self.hash_field:
+            setattr(instance, self.hash_field, hash)
 
     def formfield(self, **kwargs):
         return super().formfield(**{
