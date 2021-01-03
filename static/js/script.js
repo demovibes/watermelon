@@ -76,6 +76,20 @@ function serverEvents(url) {
 
             // update song duration
             countdown(event_time.getTime(), obj.value.duration * 1000);
+          } else if (obj.type === "CHAT") {
+            // received new chat message, need to update the chat window
+            var chat = document.getElementById("chat-messages");
+
+            // create the message to post
+            var message = document.createElement("div");
+            message.setAttribute("class", "chat-message");
+            message.innerHTML = '<a href="/user/' + obj.value.user + '/" class="user ' + obj.value.user_class + '">' + obj.value.user + '</a><span class="chat-message-time">' + obj.value.time + '</span><br><span class="chat-message-text">' + obj.value.text + '</span>';
+            chat.insertBefore(message, chat.firstChild);
+
+            // delete messages if more than 10
+            while (chat.childNodes.length > 10) {
+              chat.removeChild(chat.lastChild)
+            }
           } else {
             alert(obj.value);
           }
