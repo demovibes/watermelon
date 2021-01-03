@@ -1,8 +1,10 @@
 from django.urls import path
 
-from .views import MessageListView, MessagePostView
+from .views import MessageList, MessagePost
+
+app_name = 'chat'
 
 urlpatterns = [
-    path('', MessageListView.as_view(), name='message-list-view'),
-    path('post/', MessagePostView.as_view(), name='message-post-view'),
+    path('', MessageList.as_view(), name='message-list'),
+    path('post/', MessagePost.as_view(), name='message-post'),
 ]

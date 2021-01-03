@@ -32,7 +32,16 @@
         <div id="chatbox-small">
           <h3>Site Chat</h3>
 {% if user.is_authenticated %}
-          Chat would go here.
+  <form action="{% url 'chat:message-post' %}" method="POST" autocomplete="off">
+  {% csrf_token %}
+  {{ chat_form.as_p }}
+  <input type="submit">
+  </form>
+  <div id="chat-messages">{% for chat_message in chat_messages %}<div class="chat-message">
+    {% user chat_message.user %}<span class="chat-message-time">{{ chat_message.time|time }}</span>
+    <br>
+    <span class="chat-message-text">{{ chat_message.text }}</span>
+  </div>{% endfor %}</div>
 {% else %}
           <b>You must be logged in to view site chat.</b>
 {% endif %}

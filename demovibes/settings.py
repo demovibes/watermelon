@@ -93,7 +93,7 @@ TEMPLATES = [
 
                 'core.context_processors.settings',
                 'playlist.context_processors.now_playing',
-#                'chat.context_processors.chat_recent',
+                'chat.context_processors.chat_recent',
             ],
         },
     },

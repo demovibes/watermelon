@@ -9,5 +9,8 @@ class Message(models.Model):
     text = models.CharField(max_length=255,
         help_text='Chat message text')
 
+    class Meta:
+        ordering = ['-time']
+
     def __str__(self):
         return ("(%s) %s: %s") % (self.time, self.user.get_username(), self.text)

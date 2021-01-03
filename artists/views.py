@@ -137,7 +137,7 @@ class ArtistMetaCreate(PermissionRequiredMixin, CreateView):
         # set this on the form so it has the value attached
         form.instance.artist_id = artist_id
 
-        # set the submiter to be the current user
+        # set the submitter to be the current user
         form.instance.submitter = self.request.user
 
         # set the "changed fields" on this request too
