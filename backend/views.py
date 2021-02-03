@@ -1,21 +1,15 @@
 from traceback import format_exc
 
 from django.contrib import messages
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.forms import Form
 from django.urls import reverse
 from django.views import View
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import FormView
-from django.views.generic.list import ListView
 
 from .models import Service
-
-
-# General index page for a Services request
-class ServiceList(PermissionRequiredMixin, ListView):
-    permission_required = 'backend.view_service'
-    model = Service
 
 # #############################################################################
 # Specific page of a Service
@@ -23,16 +17,12 @@ class ServiceList(PermissionRequiredMixin, ListView):
 class ServiceDual(View):
 
     def get(self, request, *args, **kwargs):
-        view = ServiceDetail.as_view()
+        view = permission_required('backend.view_service')(DetailView.as_view( model = Service ))
         return view(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         view = ServiceForm.as_view()
         return view(request, *args, **kwargs)
-
-class ServiceDetail(PermissionRequiredMixin, DetailView):
-    permission_required = 'backend.view_service'
-    model = Service
 
 # #############################################################################
 class ServiceForm(PermissionRequiredMixin, SingleObjectMixin, FormView):

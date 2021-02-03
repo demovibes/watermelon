@@ -30,6 +30,9 @@ class Profile(models.Model):
         from django.urls import reverse
         return reverse('user_profiles:profile-detail', kwargs={'slug': self.user.username})
 
+    class Meta:
+        ordering = ['-user__is_superuser', '-user__is_staff', 'user__username']
+
     def __str__(self):
         return '%s [%s]' % (self.user, self.location)
 

@@ -1,17 +1,7 @@
 from django.views.generic.base import TemplateView
-from django.views.generic.detail import DetailView
-from django.views.generic.list import ListView
 
 from .models import Stream
 
-
-# General index page for a Streams request
-class StreamList(ListView):
-    model = Stream
-
-# Specific page of a stream
-class StreamDetail(DetailView):
-    model = Stream
 
 # Player page
 #  Returns streams filtered by active,

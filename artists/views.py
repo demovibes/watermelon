@@ -10,11 +10,6 @@ from .models import Artist, ArtistMeta
 
 
 # #############################################################################
-# General index page for a Artist request
-class ArtistList(ListView):
-    model = Artist
-    paginate_by = 100
-
 # Specific page of an Artist
 class ArtistDetail(DetailView):
     model = Artist

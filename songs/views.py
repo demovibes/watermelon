@@ -10,11 +10,6 @@ from .models import Song, SongMeta
 
 
 # #############################################################################
-# General index page for a Song request
-class SongList(ListView):
-    model = Song
-    paginate_by = 100
-
 # Specific page of a Song
 class SongDetail(DetailView):
     model = Song
