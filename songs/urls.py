@@ -1,7 +1,9 @@
 from django.urls import path
 
-from .views import (SongDetail, SongList, SongMetaCreate, SongMetaDual,
-                    SongMetaList)
+from django.views.generic.list import ListView
+
+from .models import Song
+from .views import (SongDetail, SongMetaCreate, SongMetaDual, SongMetaList)
 
 app_name = 'songs'
 
@@ -10,5 +12,5 @@ urlpatterns = [
     path('meta/', SongMetaList.as_view(), name='songmeta-list'),
     path('<int:song_id>/edit/', SongMetaCreate.as_view(), name='songmeta-create'),
     path('<int:pk>/', SongDetail.as_view(), name='song-detail'),
-    path('', SongList.as_view(), name='song-list'),
+    path('', ListView.as_view( model=Song ), name='song-list'),
 ]

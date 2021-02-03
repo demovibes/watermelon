@@ -2,18 +2,12 @@ import json
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponse
-from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView
 from django.template.defaultfilters import time as TimeFilter
 
 from events.models import Event
 
 from .models import Message
-
-
-class MessageList(ListView):
-    model = Message
-    paginate_by = 100  # if pagination is desired
 
 class MessagePost(PermissionRequiredMixin, CreateView):
     permission_required = 'chat.add_message'
