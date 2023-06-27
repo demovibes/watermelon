@@ -1,11 +1,11 @@
 # watermelon
-Next-generation web backend for streaming community radio, based on Django 3.2.
+Next-generation web backend for streaming community radio, based on Django 4.2.
 
 ## Getting Started
 watermelon requires several Python packages to do its job, but fortunately most
 can be bootstrapped from the source distribution.  At a minimum, all you need
-is a working Python 3.6+ installation - this is the oldest version supported by
-Django 3.2.
+is a working Python 3.8+ installation - this is the oldest version supported by
+Django 4.2.
 
 1. Create a Python virtual environment, from which you will run watermelon.
     The purpose of the virtual environment is to allow Python to manage the

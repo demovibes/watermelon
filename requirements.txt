@@ -1,9 +1,9 @@
 # Django base
-Django>=3.2,<4.0
+Django>=4.2,<5.0
 # Image operations
-Pillow>=2
+Pillow>=6.2.1
 # For admindocs
-docutils>=0.15
+docutils>=0.16
 # REST API support
 #djangorestframework
 # If you intend to use Sox or ffmpeg, uncomment:
