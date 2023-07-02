@@ -37,24 +37,24 @@ ALLOWED_HOSTS = [ '*' ]
 INSTALLED_APPS = [
     # Key-Value store for site settings
     #  also contains 'common' abstract models etc
-    'core.apps.CoreConfig',
+    'demovibes.core.apps.CoreConfig',
 
     # events system
-    'events.apps.EventsConfig',
+    'demovibes.events.apps.EventsConfig',
 
     # Backend control pages
-    'backend.apps.BackendConfig',
+    'demovibes.backend.apps.BackendConfig',
 
     # Site areas
-    'player.apps.PlayerConfig',
-    'artists.apps.ArtistsConfig',
-    'songs.apps.SongsConfig',
-    'user_profiles.apps.UserProfilesConfig',
+    'demovibes.player.apps.PlayerConfig',
+    'demovibes.artists.apps.ArtistsConfig',
+    'demovibes.songs.apps.SongsConfig',
+    'demovibes.user_profiles.apps.UserProfilesConfig',
 
-    'chat.apps.ChatConfig',
+    'demovibes.chat.apps.ChatConfig',
 
     # Playlist (queue)
-    'playlist.apps.PlaylistConfig',
+    'demovibes.playlist.apps.PlaylistConfig',
 
     # Admin panel, user auth, and dependencies
     'django.contrib.admin',
@@ -93,9 +93,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                'core.context_processors.settings',
-                'playlist.context_processors.now_playing',
-                'chat.context_processors.chat_recent',
+                'demovibes.core.context_processors.settings',
+                'demovibes.playlist.context_processors.now_playing',
+                'demovibes.chat.context_processors.chat_recent',
             ],
         },
     },

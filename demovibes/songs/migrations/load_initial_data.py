@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from django.contrib.auth.models import User
 from django.db import migrations
 
-from artists.models import Artist
+from demovibes.artists.models import Artist
 
 
 def get_initial_songs():

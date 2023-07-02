@@ -2,8 +2,8 @@
 
 . .venv/bin/activate
 
-FILES="*/migrations/load_initial_data.py"
-FILES_BAK="*/migrations/load_initial_data.py.bak"
+FILES="demovibes/*/migrations/load_initial_data.py"
+FILES_BAK="demovibes/*/migrations/load_initial_data.py.bak"
 
 # collect initial_data migrations
 for f in $FILES
@@ -12,7 +12,7 @@ do
   mv $f $f.bak
 done
 
-rm */migrations/0*.py
+rm demovibes/*/migrations/0*.py
 rm db.sqlite3
 rm -rf uploads
 python manage.py makemigrations

@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.views.generic.base import View
 
-from core.models import Setting
+from demovibes.core.models import Setting
 
 from .models import Event
 

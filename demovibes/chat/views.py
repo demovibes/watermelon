@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.views.generic.edit import CreateView
 from django.template.defaultfilters import time as TimeFilter
 
-from events.models import Event
+from demovibes.events.models import Event
 
 from .models import Message
 

@@ -21,21 +21,21 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('song/', include('songs.urls')),
-    path('artist/', include('artists.urls')),
+    path('song/', include('demovibes.songs.urls')),
+    path('artist/', include('demovibes.artists.urls')),
 
     # player / streams app
-    path('', include('player.urls')),
-    path('playlist/', include('playlist.urls')),
+    path('', include('demovibes.player.urls')),
+    path('playlist/', include('demovibes.playlist.urls')),
 
-    path('user/', include('user_profiles.urls')),
-    path('chat/', include('chat.urls')),
+    path('user/', include('demovibes.user_profiles.urls')),
+    path('chat/', include('demovibes.chat.urls')),
 
-    path('backend/', include('backend.urls')),
+    path('backend/', include('demovibes.backend.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 
     # events
-    path('events/', include('events.urls')),
+    path('events/', include('demovibes.events.urls')),
 
     # admin documentation and main site
     path('admin/doc/', include('django.contrib.admindocs.urls')),

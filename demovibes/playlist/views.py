@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import SingleObjectMixin
 
-from songs.models import Song
+from demovibes.songs.models import Song
 
 from .models import Entry
 

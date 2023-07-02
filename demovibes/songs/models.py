@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
 
-from core.models import AutoCreateModify
+from demovibes.core.models import AutoCreateModify
 
 from .fields import AudioField
 

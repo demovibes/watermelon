@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 
-from core.models import AutoCreateModify
+from demovibes.core.models import AutoCreateModify
 
 
 class ArtistBase(AutoCreateModify):
