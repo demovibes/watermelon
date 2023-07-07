@@ -26,6 +26,12 @@ def get_initial_services():
           { 'name': 'Output Log', 'path': '/var/log/ices/ices.log', 'readonly': True, },
         ]
       },
+      { 'name': 'Background-Transcode', 'description': 'Background transcoding (cache) files to .ogg format', 'pidfile': '/var/run/background-transcode.pid', 'command': [
+          { 'name': 'status', 'command': 'kill -0 $PID', 'autorun': True },
+          { 'name': 'start', 'command': '/home/pi/src/watermelon/contrib/ices/background-transcode.py' },
+          { 'name': 'stop', 'command': 'kill -INT $PID' },
+        ], 'file': [ ]
+      },
     ]
 
 # Defines some initial data to load to the system.

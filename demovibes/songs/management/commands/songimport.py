@@ -9,9 +9,9 @@ from django.core.files import File
 from django.core.files.storage import default_storage
 from django.contrib.auth.models import User
 
-from artists.models import Artist, ArtistMeta
-from songs.models import Song, SongMeta, SongFile, upload_to
-from core.models import Setting
+from demovibes.artists.models import Artist, ArtistMeta
+from demovibes.songs.models import Song, SongMeta, SongFile, upload_to
+from demovibes.core.models import Setting
 
 class Command(BaseCommand):
     help = 'Import one or more songs to the system.'
@@ -79,7 +79,8 @@ class Command(BaseCommand):
                 except Artist.DoesNotExist:
                     artist = Artist(name=artist_name)
                     artist.save()
-                    artist_meta = ArtistMeta(artist=artist, name=artist_name)
+
+                    artist_meta = ArtistMeta(artist=artist, name=artist_name, changed_fields='name', reviewed=True, accepted=True, submitter_id=admin_id)
                     artist_meta.save()
             else:
                 artist = None

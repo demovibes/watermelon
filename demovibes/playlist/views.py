@@ -33,7 +33,7 @@ class EntryAdd(PermissionRequiredMixin, SingleObjectMixin, View):
         if (song.available):
             # set locktime on the song
             # make it 25% of total length of all songs in DB
-            duration_sum = Song.objects.filter(is_active=True).aggregate(Sum('duration'))['duration__sum']
+            duration_sum = Song.objects.filter(is_active=True).aggregate(Sum('song_file__duration'))['song_file__duration__sum']
             #from pprint import pprint
             #pprint(duration_sum)
             song.locked_until = timezone.now() + duration_sum / 2

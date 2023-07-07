@@ -6,7 +6,7 @@
     <logpath>/var/log/ices</logpath>
     <logfile>ices.log</logfile>
     <!-- 1=error,2=warn,3=info,4=debug -->
-    <loglevel>4</loglevel>
+    <loglevel>3</loglevel>
     <!-- set this to 1 to log to the console instead of to the file above -->
     <consolelog>0</consolelog>
 
@@ -84,11 +84,13 @@
                 restriction will be relaxed in the future.
                 Remove this section if you don't want your files getting reencoded.
             -->
+<!--
             <encode>
-                <nominal-bitrate>64000</nominal-bitrate> <!-- bps. e.g. 64000 for 64 kbps -->
+                <nominal-bitrate>64000</nominal-bitrate>
                 <samplerate>44100</samplerate>
                 <channels>2</channels>
             </encode>
+-->
         </instance>
 
     </stream>

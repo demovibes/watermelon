@@ -53,7 +53,7 @@ Django 4.2.
     Note that the Icecast default port is 8000, so the dev server should be run
     on a different port.
 
-    A shortcut script to launch the server, `runserfer.sh`, is found in the
+    A shortcut script to launch the server, `runserver.sh`, is found in the
     root folder.
 
 ## Setting up a Streamer
@@ -91,3 +91,9 @@ The `backend` app can be used to set up commands to query backend status.  The
 default install comes with some defaults for `icecast` and `ices` - these can
 be changed from the Admin panel to fit your streaming setup, and then non-admin
 users can get status or start/stop/etc services from the UI.
+
+There is also a script which will transcode songs in the library to .ogg format
+and store them in a MEDIA_ROOT/songs_cache folder.  The "baked" cache files will
+be used by ices-ogg-only.py where available.  This transcoding is effectively a
+CPU-time to disk-space tradeoff, allowing Watermelon to run on hardware that
+cannot keep up with real-time encoding (e.g. Raspberry Pi).

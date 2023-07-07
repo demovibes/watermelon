@@ -62,6 +62,9 @@ class SongMetaDetail(PermissionRequiredMixin, DetailView):
                 current = "\n".join( list(a.name for a in self.object.song.artist.all()) )
                 #new = ' '.join(self.object.artist.all())
                 new = "\n".join( list(a.name for a in self.object.artist.all()) )
+            elif (field == 'filepath'):
+                current = self.object.song.song_file
+                new = self.object.song_file
             else:
                 current = getattr(self.object.song, field)
                 new = getattr(self.object, field)

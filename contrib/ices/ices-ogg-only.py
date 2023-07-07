@@ -13,9 +13,10 @@ Filename is printed to command line for IceS to read.
 #  django.setup() is called.
 import sys
 from os import environ
+from os.path import isfile
 import json
 
-sys.path.append('/home/grkenn/src/watermelon')
+sys.path.append('/home/pi/src/watermelon')
 environ.setdefault('DJANGO_SETTINGS_MODULE', 'demovibes.settings')
 
 # path set up and settings file chosen: load Django.
@@ -23,13 +24,15 @@ import django
 django.setup()
 
 # now we can import the other Django-specific items and continue.
+from django.conf import settings
+
 from django.urls import reverse
 from django.utils.timezone import now
 
 from django.contrib.auth.models import User
-from playlist.models import Entry
-from songs.models import Song
-from events.models import Event
+from demovibes.playlist.models import Entry
+from demovibes.songs.models import Song
+from demovibes.events.models import Event
 
 # choose next unplayed song from playlist
 object = Entry.objects.filter(time_play__isnull=True).order_by('-time_play').first()
@@ -40,7 +43,11 @@ if object == None:
   # construct a new request instead
   object = Entry(song=song, user=user)
 
-source_file = object.song.song_file.filepath.path
+# Check if a cached file exists first, and use that,
+#  otherwise use the file right from the DB
+source_file = '{0}/songs_cache/{1}/{2}.ogg'.format(settings.MEDIA_ROOT, object.song.id // 1000, object.song.id)
+if not isfile(source_file):
+    source_file = object.song.song_file.filepath.path
 
 # mark object as "played" and save
 object.time_play = now()

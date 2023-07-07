@@ -26,7 +26,7 @@ Playlist
   <tr>
     <td>{% song entry.song.pk %}</td>
     <td>{% for artist in entry.song.artist.all %}{% artist artist.pk %} {% endfor %}</td>
-    <td>{% duration entry.song.duration %} </td>
+    <td>{% duration entry.song.song_file.duration %}</td>
     <td>{{ entry.time_request|date:"H:i" }}</td>
     <td>n/a</td>
     <td>{% user entry.user.username %}</td>
@@ -48,7 +48,7 @@ Playlist
   <tr>
     <td>{% song entry.song.pk %}</td>
     <td>{% for artist in entry.song.artist.all %}{% artist artist.pk %} {% endfor %}</td>
-    <td>{% duration entry.song.duration %} </td>
+    <td>{% duration entry.song.song_file.duration %}</td>
     <td>{{ entry.time_request|date:"H:i" }}</td>
     <td>{{ entry.time_play|date:"H:i" }}</td>
     <td>{% user entry.user.username %}</td>

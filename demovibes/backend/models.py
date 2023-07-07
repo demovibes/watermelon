@@ -72,7 +72,7 @@ class Command(models.Model):
             subst['$PIDFILE'] = self.service.pidfile
             try:
                 with open(self.service.pidfile, 'r') as f:
-                    subst['$PID'] = f.read()
+                    subst['$PID'] = f.read().strip()
             except FileNotFoundError as e:
                     subst['$PID'] = (-1, str(e))
 

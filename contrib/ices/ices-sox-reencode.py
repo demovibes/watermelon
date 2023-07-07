@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 """
-Script to pass songs to IceS - for ONLY OGG-VORBIS stations
+Script to pass songs to IceS - RE-ENCODE Songs to .ogg with SoX
 
 This is a simple callback script that chooses the next song from the playlist,
 and if none are waiting, it queues a random unlocked song instead.
 
-Filename is printed to command line for IceS to read.
+The file is transcoded to a .ogg format temporary file, then the filename
+is handed off to IceS.
 """
 
 # The order of imports is IMPORTANT!  Django cannot be started without
@@ -18,7 +19,7 @@ import json
 from tempfile import NamedTemporaryFile
 import sox
 
-sys.path.append('/home/grkenn/src/watermelon')
+sys.path.append('/home/pi/src/watermelon')
 environ.setdefault('DJANGO_SETTINGS_MODULE', 'demovibes.settings')
 
 # path set up and settings file chosen: load Django.
@@ -30,9 +31,9 @@ from django.urls import reverse
 from django.utils.timezone import now
 
 from django.contrib.auth.models import User
-from playlist.models import Entry
-from songs.models import Song
-from events.models import Event
+from demovibes.playlist.models import Entry
+from demovibes.songs.models import Song
+from demovibes.events.models import Event
 
 # choose next unplayed song from playlist
 object = Entry.objects.filter(time_play__isnull=True).order_by('-time_play').first()

@@ -12,5 +12,5 @@ urlpatterns = [
     path('meta/', SongMetaList.as_view(), name='songmeta-list'),
     path('<int:song_id>/edit/', SongMetaCreate.as_view(), name='songmeta-create'),
     path('<int:pk>/', SongDetail.as_view(), name='song-detail'),
-    path('', ListView.as_view( model=Song ), name='song-list'),
+    path('', ListView.as_view( model=Song, paginate_by=100 ), name='song-list'),
 ]
