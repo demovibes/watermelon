@@ -103,6 +103,7 @@
         <h3>User Menu</h3>
         <ul class="menulist">
 {% if user.is_authenticated %}
+          <li id="user-profile"><a href="{% url 'user_profiles:profile-detail' user.username %}">My Profile</a>
           <li id="logout"><a href="{% url 'logout' %}">Log Me Out</a>
 
           {% if user.is_staff %}<li id="admin"><a href="/admin" target="admin">Staff Area</a>{% endif %}

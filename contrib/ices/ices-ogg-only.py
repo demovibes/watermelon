@@ -33,15 +33,16 @@ from django.contrib.auth.models import User
 from demovibes.playlist.models import Entry
 from demovibes.songs.models import Song
 from demovibes.events.models import Event
+from demovibes.playlist.views import queue_song
 
 # choose next unplayed song from playlist
 object = Entry.objects.filter(time_play__isnull=True).order_by('-time_play').first()
 if object == None:
-  # choose random available song to queue
-  song = Song.objects.filter(is_active=True).order_by('?').first()
-  user = User.objects.get(username='DJRandom')
-  # construct a new request instead
-  object = Entry(song=song, user=user)
+    # choose random available song to queue
+    song = Song.objects.filter(is_active=True, locked_until__lt=now()).order_by('?').first()
+    user = User.objects.get(username='DJRandom')
+    # construct a new request instead
+    object = queue_song(song=song, user=user)
 
 # Check if a cached file exists first, and use that,
 #  otherwise use the file right from the DB
