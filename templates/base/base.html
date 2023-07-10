@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>{{ settings.site_name }} - {% block title %}Welcome{% endblock %}</title>
+    <title>{{ request.site.name }} - {% block title %}Welcome{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% if user.profile.theme %}<link rel="stylesheet" href="{% static user.profile.theme %}">{% endif %}
@@ -61,7 +61,7 @@
 
       <div id="content" class="column">
         <div id="header">
-          <h1><a href="/">{{ settings.site_name }}</a></h1>
+          <h1><a href="/">{{ request.site.name }}</a></h1>
         </div>
 {% block messages %}
 {% if messages %}
@@ -73,7 +73,7 @@
 {% endblock messages %}
         <div id="content-header">
 {% block content_header %}
-          welcome to {{ settings.site_name }}
+          welcome to {{ request.site.name }}
 {% endblock %}
         </div>
         <div id="content-main">
@@ -84,9 +84,9 @@
           <hr>
           user mgmt:
           {% if user.is_authenticated %}
-          <p>logged in as <b>{{ user.username }}</b> (<a href="{% url 'logout' %}">logout</a>)
+          <p>logged in as <b>{{ user.username }}</b> (<a href="{% url 'account_logout' %}">logout</a>)
           {% else %}
-          <p>not logged in (<a href="{% url 'login' %}">login</a>)
+          <p>not logged in (<a href="{% url 'account_login' %}">login</a>)
           {% endif %}
           <ul>
           <li><a href="{% url 'artists:artist-list' %}">artists</a>
@@ -104,11 +104,12 @@
         <ul class="menulist">
 {% if user.is_authenticated %}
           <li id="user-profile"><a href="{% url 'user_profiles:profile-detail' user.username %}">My Profile</a>
-          <li id="logout"><a href="{% url 'logout' %}">Log Me Out</a>
+          <li id="logout"><a href="{% url 'account_logout' %}">Log Me Out</a>
 
           {% if user.is_staff %}<li id="admin"><a href="/admin" target="admin">Staff Area</a>{% endif %}
 {% else %}
-          <li id="login"><a href="{% url 'login' %}">Log In / Register</a>
+          <li id="login"><a href="{% url 'account_login' %}">Log In</a>
+          <li id="register"><a href="{% url 'account_signup' %}">Register</a>
 {% endif %}
         </ul>
         </div>

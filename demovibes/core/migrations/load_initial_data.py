@@ -1,14 +1,13 @@
 # Load initial data for the app
 
-import os
+from pathlib import Path
 
 from django.db import migrations
 
 from demovibes.settings import BASE_DIR
 
 base_settings = [
-      { 'key': 'site_name', 'value': 'Watermelon', 'description': 'Site name to display in all pages' },
-      { 'key': 'scan_tool', 'value': os.path.join(BASE_DIR, 'contrib/scan/soxi.py'), 'description': 'Path to scan tool, used for getting information about uploaded files' },
+      { 'key': 'scan_tool', 'value': BASE_DIR / 'contrib/scan/soxi.py', 'description': 'Path to scan tool, used for getting information about uploaded files' },
       { 'key': 'events_delay', 'value': 3, 'description': 'Delay between polls for new events, in seconds.  Lower reduces latency but potentially increases CPU and database activity.' },
       { 'key': 'events_timeout', 'value': 0, 'description': 'How long (seconds) to keep events connections open, before closing and forcing client reconnect.  Set to 0 to wait indefinitely.' },
     ]

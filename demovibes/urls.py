@@ -21,6 +21,11 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 urlpatterns = [
+    # User_profile functions fit under user/
+    path('user/', include('demovibes.user_profiles.urls')),
+    # Other user account creation / mgmt
+    path('accounts/', include('allauth.urls')),
+
     path('song/', include('demovibes.songs.urls')),
     path('artist/', include('demovibes.artists.urls')),
 
@@ -28,11 +33,10 @@ urlpatterns = [
     path('', include('demovibes.player.urls')),
     path('playlist/', include('demovibes.playlist.urls')),
 
-    path('user/', include('demovibes.user_profiles.urls')),
     path('chat/', include('demovibes.chat.urls')),
 
+    # backend svc monitoring
     path('backend/', include('demovibes.backend.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
 
     # events
     path('events/', include('demovibes.events.urls')),
