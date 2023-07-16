@@ -29,6 +29,8 @@ urlpatterns = [
     path('song/', include('demovibes.songs.urls')),
     path('artist/', include('demovibes.artists.urls')),
 
+    path('collection/', include('demovibes.collections.urls')),
+
     # player / streams app
     path('', include('demovibes.player.urls')),
     path('playlist/', include('demovibes.playlist.urls')),

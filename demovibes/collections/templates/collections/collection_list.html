@@ -1,0 +1,38 @@
+{% extends 'base/base.html' %}
+{% load tags_collections %}
+
+{% block title %}
+{{ collection_type.name }} List
+{% endblock %}
+
+{% block content_header %}
+{{ collection_type.name }} List{% if perms.collections.change_collectionmeta %} [<a href="{% url 'collections:collectionmeta-list' collection_type.id %}">{{ collection_type.name }} Metadata List</a>]{% endif %}
+{% endblock %}
+
+{% block content %}
+<ul class="brief-list">
+{% for object in page_obj %}
+    <li>{% collection object.pk %}</li>
+{% empty %}
+    <li>No collection profiles yet.</li>
+{% endfor %}
+</ul>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}

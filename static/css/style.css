@@ -59,6 +59,14 @@ div.column {
   content: "🎵"
 }
 
+.collection:before {
+  content: "📋"
+}
+
+.collection-album:before {
+  content: "💿"
+}
+
 .playlist:before {
   content: "⏯"
 }

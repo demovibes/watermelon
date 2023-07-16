@@ -23,6 +23,14 @@
 {% if perms.songs.view_songmeta %}<ul><li><a href="{% url 'songs:songmeta-list' %}">Pending Metadata</a></ul>{% endif %}
             <li class="artist"><a href="{% url 'artists:artist-list' %}">Artists</a>
 {% if perms.artists.view_artistmeta %}<ul><li><a href="{% url 'artists:artistmeta-list' %}">Pending Metadata</a></ul>{% endif %}
+            <li class="collection">Collections<ul>
+              {% for collection_type in collection_types %}
+              <li class="collection-{{ collection_type.id }}"><a href="{% url 'collections:collection-list' collection_type.id %}">{{ collection_type.name }}</a>
+{% if perms.collections.view_collectionmeta %}<ul><li><a href="{% url 'collections:collectionmeta-list' collection_type.id %}">Pending Metadata</a></ul>{% endif %}
+              {% endfor %}
+              </ul>
+            </li>
+
             <li>&nbsp;
             <li class="playlist"><a href="{% url 'playlist:entry-list' %}">Playlist</a>
             <li>&nbsp;
@@ -91,6 +99,7 @@
           <ul>
           <li><a href="{% url 'artists:artist-list' %}">artists</a>
           <li><a href="{% url 'songs:song-list' %}">songs</a>
+          <li><a href="{% url 'collections:collection-type-list' %}">collections</a>
           <li><a href="{% url 'player:stream-list' %}">streams</a>
           <li><a href="{% url 'user_profiles:profile-list' %}">user-profiles</a>
           </ul>

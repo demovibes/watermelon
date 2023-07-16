@@ -51,6 +51,9 @@ INSTALLED_APPS = [
     'demovibes.songs.apps.SongsConfig',
     'demovibes.user_profiles.apps.UserProfilesConfig',
 
+    # Generic Collection (album, group, label, tag, etc)
+    'demovibes.collections.apps.CollectionsConfig',
+
     'demovibes.chat.apps.ChatConfig',
 
     # Playlist (queue)
@@ -102,6 +105,7 @@ TEMPLATES = [
 
                 'demovibes.core.context_processors.settings',
                 'demovibes.playlist.context_processors.now_playing',
+                'demovibes.collections.context_processors.collection_types',
                 'demovibes.chat.context_processors.chat_recent',
             ],
         },
@@ -182,8 +186,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Auth config
 
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_REQUIRED = False
+#ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
 AUTHENTICATION_BACKENDS = [

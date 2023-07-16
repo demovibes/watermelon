@@ -1,0 +1,37 @@
+{% extends 'base/base.html' %}
+{% load tags_collections %}
+{% load tags_user_profiles %}
+{% load l10n %}
+
+{% block title %}
+Collection Meta List
+{% endblock %}
+
+{% block content_header %}
+Collection Meta List
+{% endblock %}
+
+{% block content %}
+<p>The following Collection metadata is in "pending" status and requires moderator review.</p>
+<br />
+<table>
+<tr>
+  <th>Collection ID</th>
+  <th>Collection Name</th>
+  <th>Submitted By</th>
+  <th>Date Submitted</th>
+  <th>Changed Fields</th>
+  <th>Detail View</th>
+</tr>
+{% for object in object_list %}
+<tr>
+    <td>{{ object.collection_id }}</td>
+    <td>{% collection object.collection_id %}</td>
+    <td>{% user object.submitter %}</td>
+    <td>{{ object.time_create|localize }}</td>
+    <td>{{ object.changed_fields }}</td>
+    <td><a href="{% url 'collections:collectionmeta-detail' object.collection.collection_type.id object.pk %}">Detail View</a></td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base/base.html' %}
+{% load tags_songs %}
+{% load tags_artists %}
+{% load tags_collections %}
+{% load tags_user_profiles %}
+{% load l10n %}
+
+{% block title %}
+{{ object.collection_type.name }} - {{ object.name }}
+{% endblock %}
+
+{% block content_header %}
+{{ object.collection_type.name }} - {{ object.name }}{% if perms.collections.change_collection %} [<a href="{% url 'admin:collections_collection_change' object.pk %}">Administrate {{ object.collection_type.name }}</a>]{% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="detail-image">
+{% if object.image %}
+   <img src="{{ object.image.url }}" title="[{{ object.name }}'s Image]" alt="[{{ object.name }}'s Image]" /><br />
+{% else %}
+   <i>No picture!</i>
+{% endif %}
+  </div>
+  <div class="detail-infobox">
+    <dl>
+      <dt>Name</dt><dd><b>{{ object.name }}</b></dd>
+      <dt>Date Created</dt><dd>{{ object.time_create|localize }}</dd>
+      {% if object.time_modify %}<dt>Last Modified</dt><dd>{{ object.time_modify|localize }}</dd>{% endif %}
+    </dl>
+  </div>
+  <h3>Artists in This {{object.collection_type.name }}</h3>
+    <ul>
+      {% for artist in object.artists.all %}
+        <li>{% artist artist.id %}
+      {% endfor %}
+    </ul>
+  <h3>Songs in This {{object.collection_type.name }}</h3>
+    <ul>
+      {% for song in object.songs.all %}
+        <li>{% song song.id %}
+      {% endfor %}
+    </ul>
+
+{% if perms.collections.create_collectionmeta %}<a href="{% url 'collections:collectionmeta-create' object.collection_type.id object.pk %}"><b>Submit changes to this {{ object.collection_type.name }}</b></a>{% endif %}
+
+{% if perms.collections.view_collectionmeta %}<hr><h3>{{ object.collection_type.name }} Metadata History</h3>
+<table>
+<tr>
+  <th>Submitted By</th>
+  <th>Date Submitted</th>
+  <th>Changed Fields</th>
+  <th>Reviewed</th>
+  <th>Accepted</th>
+  <th>Detail View</th>
+</tr>
+{% for collectionmeta in object.collectionmeta_set.all %}
+<tr>
+    <td>{% user collectionmeta.submitter %}</td>
+    <td>{{ collectionmeta.time_create|localize }}</td>
+    <td>{{ collectionmeta.changed_fields }}</td>
+    <td>{{ collectionmeta.reviewed }}</td>
+    <td>{{ collectionmeta.accepted }}</td>
+    <td><a href="{% url 'collections:collectionmeta-detail' object.collection_type.id collectionmeta.pk %}">Detail View</a></td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+Edit {{ object.collection_type }} - {{ object.name }}
+{% endblock %}
+
+{% block content_header %}
+Edit {{ object.collection_type }} - {{ object.name }}
+{% endblock %}
+
+{% block content %}
+<form enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit">
+</form>
+{% endblock %}
+
