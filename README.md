@@ -30,7 +30,13 @@ Django 4.2.
     folder:
     `pip install -r requirements.txt`
 
-4. Set up the initial (empty) database.  Eventually, watermelon will ship with
+4. Apply local settings.  Start by copying `demovibes/local_settings.py.example`
+    to `demovibes/local_settings.py` and then change values as needed.  The
+    defaults should work for local testing, but if you want to e.g. send email
+    (for django-allauth) you'll need to set up an email host, and if you want a
+    different db that just sqlite then the `DATABASES` section is for you.
+
+5. Set up the initial (empty) database.  Eventually, watermelon will ship with
     "migrations" that allow upgrade from version to version.  Because this is
     early development, migrations are not being added to version control.  You
     will need to create and apply the initial migrations from scratch:
@@ -45,7 +51,7 @@ Django 4.2.
     **Change this password before going live with the site** or you will be
     sorry.
 
-5. Launch the development server.  From the root folder, run this command:
+6. Launch the development server.  From the root folder, run this command:
     `python manage.py runserver`
     This will start a local webserver for testing watermelon, running at
     http://127.0.0.1:8000/.  (To run a server that can be accessed externally,
