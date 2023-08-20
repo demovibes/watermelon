@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 """
-Script to pass songs to IceS - RE-ENCODE Songs to .ogg with SoX
+Script to pass songs to IceS - DECODE Songs to raw PCM with SoX
 
-This is a simple callback script that chooses the next song from the playlist,
-and if none are waiting, it queues a random unlocked song instead.
-
-The file is transcoded to a .ogg format temporary file, then the filename
-is handed off to IceS.
+This script runs in tandem with IceS in "stdinpcm" mode, where it
+will decode selected library files to a PCM stream and pipe them
+through a named pipe (fifo) or similar.
 """
 
 # The order of imports is IMPORTANT!  Django cannot be started without
@@ -48,10 +46,10 @@ source_file = object.song.song_file.filepath.path
 
 # now for the tricky part
 # get a temp file
-with NamedTemporaryFile(suffix='.ogg', delete=False) as f:
+with NamedTemporaryFile(suffix='.wav', delete=False) as f:
     tempfile = f.name
 
-#  re-encode the file to .ogg
+#  re-encode the file to .wav
 tfm = sox.Transformer()
 tfm.build_file(source_file, tempfile)
 

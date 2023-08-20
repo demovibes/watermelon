@@ -4,8 +4,6 @@ from django.db import models
 from django.urls import reverse
 
 from demovibes.core.models import AutoCreateModify
-from demovibes.artists.models import Artist
-from demovibes.songs.models import Song
 
 
 class CollectionType(models.Model):
@@ -22,12 +20,11 @@ class CollectionType(models.Model):
     description = models.TextField(blank=True,
         help_text='Description with more information about this collection type')
 
+    class Meta:
+        ordering = [ 'id' ]
 
     def __str__(self):
         return self.name
-
-    class Meta:
-        ordering = [ 'id' ]
 
 
 class CollectionBase(AutoCreateModify):
@@ -46,21 +43,18 @@ class CollectionBase(AutoCreateModify):
         help_text='Description of the contents of this collection')
 
     # foreign keys and other links
-    artists = models.ManyToManyField(Artist)
-    songs = models.ManyToManyField(Song)
+    related_collections = models.ManyToManyField('Collection', related_name='+')
 
     class Meta:
         abstract = True
-        ordering = ['name', 'pk']
 
-    def __str__(self):
-        return '%s: %s' % (self.collection_type.name, self.name)
 
 class Collection(CollectionBase):
     """
     A Collection is a generic collection of songs or artists.
 
     Some examples:
+    * An Artist is a Collection of songs
     * An Album is a Collection of songs and an artist (or more)
     * A Label may contain Artists (and/or Songs), etc
     * Use a Collection for Group or "artist collective"
@@ -72,9 +66,15 @@ class Collection(CollectionBase):
     is_active = models.BooleanField(default=True,
         help_text='Designates whether this song should be treated as active. Unselect this instead of deleting songs.')
 
+    class Meta:
+        ordering = [ 'collection_type', 'name', 'pk' ]
 
     def get_absolute_url(self):
         return reverse('collections:collection-detail', kwargs={'collection_type': self.collection_type.id, 'pk': self.pk})
+
+    def __str__(self):
+        return '%s: %s' % (self.collection_type.name, self.name)
+
 
 class CollectionMeta(CollectionBase):
     """
@@ -100,7 +100,7 @@ class CollectionMeta(CollectionBase):
         help_text="User account that submitted the meta entry")
 
     class Meta:
-        ordering = ['collection', 'time_create']
+        ordering = [ 'collection', 'time_create' ]
 
     #def clean(self):
     #    if self.real_name == self.name:
@@ -110,4 +110,4 @@ class CollectionMeta(CollectionBase):
         return reverse('collections:collectionmeta-detail', kwargs={'collection_type': self.collection.collection_type.id, 'pk': self.pk})
 
     def __str__(self):
-        return '%d ("%s"), %s at %s' % (self.collection.pk, self.name, self.submitter.username, self.time_create)
+        return '%d ("%s: %s"), %s at %s' % (self.collection.pk, self.collection.collection_type.name, self.name, self.submitter.username, self.time_create)

@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-{% load tags_artists %}
+{% load tags_collections %}
 {% load l10n %}
 
 {% block title %}
@@ -22,7 +22,7 @@ User Profile - {{ object.user.get_username }}{% if perms.auth.change_user %} [<a
 
     <dl>
       <dt>Username</dt><dd><b>{{ object.user.get_username }}</b></dd>
-      {% if object.user.artist %}<dt>User's Artist Page</dt><dd>{% artist object.user.artist.pk %}</dd>{% endif %}
+      {% if object.user.artist %}<dt>User's Artist Page</dt><dd>{% collection object.user.artist.pk %}</dd>{% endif %}
       {% if object.user.get_full_name %}<dt>Real Name</dt><dd>{{ object.user.get_full_name }}</dd>{% endif %}
       {% if object.birth_date %}<dt>Birthdate</dt><dd>{{ object.birth_date|localize }}</dd>{% endif %}
       {% if object.location %}<dt>Location</dt><dd>{{ object.location }}</dd>{% endif %}

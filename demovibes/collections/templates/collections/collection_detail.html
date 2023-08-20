@@ -1,6 +1,5 @@
 {% extends 'base/base.html' %}
 {% load tags_songs %}
-{% load tags_artists %}
 {% load tags_collections %}
 {% load tags_user_profiles %}
 {% load l10n %}
@@ -28,15 +27,20 @@
       {% if object.time_modify %}<dt>Last Modified</dt><dd>{{ object.time_modify|localize }}</dd>{% endif %}
     </dl>
   </div>
-  <h3>Artists in This {{object.collection_type.name }}</h3>
+  <h3>Public information</h3>
+  {{ object.description|urlize|linebreaks }}
+  {% regroup object.related_collections.all by collection_type as collection_list %}
+  {% for collection in collection_list %}
+  <h3>{{ collection.grouper }}s in This {{object.collection_type.name }}</h3>
     <ul>
-      {% for artist in object.artists.all %}
-        <li>{% artist artist.id %}
+      {% for c in collection.list %}
+        <li>{% collection c.pk %}
       {% endfor %}
     </ul>
+  {% endfor %}
   <h3>Songs in This {{object.collection_type.name }}</h3>
     <ul>
-      {% for song in object.songs.all %}
+      {% for song in object.song_set.all %}
         <li>{% song song.id %}
       {% endfor %}
     </ul>

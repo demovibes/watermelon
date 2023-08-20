@@ -1,5 +1,5 @@
 from re import sub
-from os.path import basename
+from pathlib import PurePath
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -13,7 +13,7 @@ from .fields import AudioField
 
 def upload_to(instance, filename):
     # files are stored in a bucket 2 levels deep, based on name field
-    base = basename(filename)
+    base = PurePath(filename).name
     firstchars = sub('[^0-9a-z_]', '_', base[:2].lower())
     # at least make sure the filename is 2 chars long
     while len(firstchars) < 2:
@@ -59,15 +59,14 @@ class SongBase(AutoCreateModify):
     name = models.CharField(max_length=191, db_index=True,
         help_text='Name of song')
 
-    # using quotes to refer to Song class from another app
-    artist = models.ManyToManyField('artists.Artist',
-        help_text='Artist(s) who created the song')
-
     # Some other info
     release_date = models.DateField(blank=True, null=True,
         help_text="Original release date of the song")
     info = models.TextField(blank=True,
         help_text='Additional information about this song')
+
+    # foreign keys and other links
+    collections = models.ManyToManyField('collections.Collection')
 
     # The uploaded file.
     song_file = models.ForeignKey(SongFile, on_delete=models.CASCADE,
@@ -96,6 +95,12 @@ class Song(SongBase):
 
     locked_until = models.DateTimeField(default=timezone.now,
         help_text='Song cannot be requested until this time')
+
+    # Some of the templates and other functions want only the artists from a collection
+    @cached_property
+    def artists(self):
+        from demovibes.collections.models import CollectionType
+        return self.collections.filter(collection_type=CollectionType.objects.get(id='artist'))
 
     @cached_property
     def available(self):

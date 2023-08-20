@@ -2,6 +2,7 @@
 from django.db import migrations
 
 collection_types = [
+      { 'id': 'artist', 'name': 'Artist', 'description': 'A musician is a person who composes, conducts, or performs music.' },
       { 'id': 'album', 'name': 'Album', 'description': 'An album is a collection of audio recordings issued on compact disc (CD), vinyl, audio tape, or another medium such as digital distribution.' },
     ]
 

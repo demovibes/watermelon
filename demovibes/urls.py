@@ -27,7 +27,6 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
 
     path('song/', include('demovibes.songs.urls')),
-    path('artist/', include('demovibes.artists.urls')),
 
     path('collection/', include('demovibes.collections.urls')),
 

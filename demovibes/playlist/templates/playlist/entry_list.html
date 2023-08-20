@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 {% load tags_songs %}
-{% load tags_artists %}
+{% load tags_collections %}
 {% load tags_user_profiles %}
 
 {% block title %}
@@ -25,7 +25,7 @@ Playlist
 {% for entry in entry_upcoming %}
   <tr>
     <td>{% song entry.song.pk %}</td>
-    <td>{% for artist in entry.song.artist.all %}{% artist artist.pk %} {% endfor %}</td>
+    <td>{% for artist in entry.song.artists %}{% collection artist.pk %} {% endfor %}</td>
     <td>{% duration entry.song.song_file.duration %}</td>
     <td>{{ entry.time_request|date:"H:i" }}</td>
     <td>n/a</td>
@@ -47,7 +47,7 @@ Playlist
 {% for entry in entry_recent %}
   <tr>
     <td>{% song entry.song.pk %}</td>
-    <td>{% for artist in entry.song.artist.all %}{% artist artist.pk %} {% endfor %}</td>
+    <td>{% for artist in entry.song.artists %}{% collection artist.pk %} {% endfor %}</td>
     <td>{% duration entry.song.song_file.duration %}</td>
     <td>{{ entry.time_request|date:"H:i" }}</td>
     <td>{{ entry.time_play|date:"H:i" }}</td>

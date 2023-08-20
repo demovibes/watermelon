@@ -65,8 +65,8 @@ event_info = {
 }
 
 # add artists
-for artist in object.song.artist.all():
-    event_info['artists'].append({'name': artist.name, 'link': reverse('artists:artist-detail', kwargs={'pk': artist.pk}) })
+for artist in object.song.artists:
+    event_info['artists'].append({'name': artist.name, 'link': reverse('collections:collection-detail', kwargs={'collection_type': 'artist', 'pk': artist.pk}) })
 
 # add event to the Event table
 event = Event(audience_type=Event.ALL, event_type="PLAYLIST", event_value=json.dumps(event_info))

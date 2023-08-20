@@ -86,10 +86,18 @@ class CollectionMetaDetail(PermissionRequiredMixin, DetailView):
         changed_field_names = self.object.changed_fields.split()
 
         for field in changed_field_names:
+            field_type = self.object._meta.get_field(field)
+            if (isinstance(field_type, ManyToManyField)):
+                current = "\n".join(str(c) for c in getattr(self.object.collection, field).all())
+                new = "\n".join(str(n) for n in getattr(self.object, field).all())
+            else:
+                current = getattr(self.object.collection, field)
+                new = getattr(self.object, field)
+
             context['changed_fields'].append( {
                 'name': field,
-                'current': getattr(self.object.collection, field),
-                'new': getattr(self.object, field)
+                'current': current,
+                'new': new,
             } )
 
         # add a form for approve / reject
@@ -145,7 +153,7 @@ class CollectionMetaCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'collections.create_collectionmeta'
     model = CollectionMeta
 
-    fields = [ 'name', 'image', 'description', 'artists', 'songs', ]
+    fields = [ 'name', 'image', 'description', 'related_collections', ]
 
     # the get and post must retrieve the COLLECTION base, not COLLECTION META.
     def get_initial(self):

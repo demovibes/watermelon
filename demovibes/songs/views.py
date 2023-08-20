@@ -1,3 +1,4 @@
+from django.db.models.fields.related import ManyToManyField
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.forms import Form, ValidationError
 from django.urls import reverse
@@ -57,11 +58,10 @@ class SongMetaDetail(PermissionRequiredMixin, DetailView):
         changed_field_names = self.object.changed_fields.split()
 
         for field in changed_field_names:
-            if (field == 'artist'):
-                #current = ' '.join(self.object.song.artist.all())
-                current = "\n".join( list(a.name for a in self.object.song.artist.all()) )
-                #new = ' '.join(self.object.artist.all())
-                new = "\n".join( list(a.name for a in self.object.artist.all()) )
+            field_type = self.object._meta.get_field(field)
+            if (isinstance(field_type, ManyToManyField)):
+                current = "\n".join(str(c) for c in getattr(self.object.song, field).all())
+                new = "\n".join(str(n) for n in getattr(self.object, field).all())
             elif (field == 'filepath'):
                 current = self.object.song.song_file
                 new = self.object.song_file
@@ -96,8 +96,9 @@ class SongMetaForm(PermissionRequiredMixin, SingleObjectMixin, FormView):
         if 'accept' in form.data:
             # copy all changed fields to the parent song and save
             for field in self.object.changed_fields.split():
-                if field == 'artist':
-                    self.object.song.artist.set(self.object.artist.all())
+                field_type = self.object._meta.get_field(field)
+                if (isinstance(field_type, ManyToManyField)):
+                    getattr(self.object.song, field).set(getattr(self.object, field).all())
                 else:
                     setattr(self.object.song, field, getattr(self.object, field))
 
@@ -127,9 +128,9 @@ class SongMetaCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'songs.create_songmeta'
     model = SongMeta
 
-    fields = [ 'name', 'artist', 'release_date', 'info', ]
+    fields = [ 'name', 'collections', 'release_date', 'info', ]
 
-    # the get and post must retrieve the ARTIST base, not ARTIST META.
+    # the get and post must retrieve the SONG base, not SONG META.
     def get_initial(self):
         # Get the initial dictionary from the superclass method
         initial = super().get_initial()
@@ -138,8 +139,10 @@ class SongMetaCreate(PermissionRequiredMixin, CreateView):
         # lookup the base object using the provided pk from kwargs
         song = Song.objects.get(pk=self.kwargs['song_id'])
         for field in self.fields:
-            if field == 'artist':
-                initial['artist'] = song.artist.all()
+            # Retrieve the value of the initial field for the form
+            field_type = song._meta.get_field(field)
+            if (isinstance(field_type, ManyToManyField)):
+                initial[field] = getattr(song, field).all()
             else:
                 initial[field] = getattr(song, field)
         return initial

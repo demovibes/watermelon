@@ -32,19 +32,19 @@ INSTALLED_APPS = [
     # Backend control pages
     'demovibes.backend.apps.BackendConfig',
 
-    # Site areas
-    'demovibes.player.apps.PlayerConfig',
-    'demovibes.artists.apps.ArtistsConfig',
-    'demovibes.songs.apps.SongsConfig',
-    'demovibes.user_profiles.apps.UserProfilesConfig',
-
-    # Generic Collection (album, group, label, tag, etc)
+    # Generic Collection (artist, album, group, label, tag, etc)
     'demovibes.collections.apps.CollectionsConfig',
-
-    'demovibes.chat.apps.ChatConfig',
+    # Individual song, the basic unit of the site
+    'demovibes.songs.apps.SongsConfig',
 
     # Playlist (queue)
     'demovibes.playlist.apps.PlaylistConfig',
+
+    # Other site areas
+    'demovibes.player.apps.PlayerConfig',
+    'demovibes.chat.apps.ChatConfig',
+
+    'demovibes.user_profiles.apps.UserProfilesConfig',
 
     # Admin panel, user auth, and dependencies
     'django.contrib.admin',

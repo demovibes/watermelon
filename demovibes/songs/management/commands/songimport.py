@@ -10,7 +10,6 @@ from django.core.files.storage import default_storage
 from django.contrib.auth.models import User
 
 from demovibes.collections.models import Collection, CollectionMeta, CollectionType
-from demovibes.artists.models import Artist, ArtistMeta
 from demovibes.songs.models import Song, SongMeta, SongFile, upload_to
 from demovibes.core.models import Setting
 
@@ -30,7 +29,8 @@ class Command(BaseCommand):
         # new artists, songs and metadata are added by "admin"
         admin_id = User.objects.get(username='admin').pk
 
-        # need the collection type matching 'album' for adds
+        # need the collection types for adds
+        artist_type = CollectionType.objects.get(id='artist')
         album_type = CollectionType.objects.get(id='album')
 
         for path in options['paths']:
@@ -55,7 +55,7 @@ class Command(BaseCommand):
             }
 
             song_info = {}
-            changed_fields = 'name filepath'
+            changed_fields = { 'name', 'filepath' }
             if 'tags' in info:
                 if 'title' in info['tags']:
                     song_info['name'] = info['tags']['title']
@@ -66,21 +66,22 @@ class Command(BaseCommand):
                 if 'date' in info['tags']:
                     song_info['date'] = datetime.strptime(info['tags']['date'], '%Y-%m-%d')
                     del info['tags']['date']
-                    changed_fields += ' release_date'
+                    changed_fields.add('release_date')
 
                 if 'artist' in info['tags']:
                     artist_name = info['tags']['artist']
                     del info['tags']['artist']
-                    changed_fields += ' artist'
+                    changed_fields.add('collections')
+
 
                 if 'album' in info['tags']:
                     album_name = info['tags']['album']
                     del info['tags']['album']
-                    changed_fields += ' album'
+                    changed_fields.add('collections')
 
                 if info['tags']:
                     song_info['info'] = "\n".join('{}: {}'.format(key, val) for key, val in info['tags'].items())
-                    changed_fields += ' info'
+                    changed_fields.add('info')
 
             else:
                 song_info['name'] = path
@@ -90,12 +91,12 @@ class Command(BaseCommand):
             # get the artist from the DB - if it doesn't exist, we need to create it
             if artist_name:
                 try:
-                    artist = Artist.objects.get(name=artist_name)
-                except Artist.DoesNotExist:
-                    artist = Artist(name=artist_name)
+                    artist = Collection.objects.get(collection_type=artist_type, name=artist_name)
+                except Collection.DoesNotExist:
+                    artist = Collection(collection_type=artist_type, name=artist_name)
                     artist.save()
 
-                    artist_meta = ArtistMeta(artist=artist, name=artist_name, changed_fields='name', reviewed=True, accepted=True, submitter_id=admin_id)
+                    artist_meta = CollectionMeta(collection=artist, name=artist_name, changed_fields='name', reviewed=True, accepted=True, submitter_id=admin_id)
                     artist_meta.save()
             else:
                 artist = None
@@ -128,16 +129,19 @@ class Command(BaseCommand):
             song.song_file = song_file
             song.save()
 
-            song.artist.set( [ artist ] )
-            song_meta = SongMeta(song=song, reviewed=True, accepted=True, changed_fields=changed_fields, submitter_id=admin_id, song_file=song_file, **song_info)
+            song_meta = SongMeta(song=song, reviewed=True, accepted=True, changed_fields=' '.join(changed_fields), submitter_id=admin_id, song_file=song_file, **song_info)
             song_meta.save()
-            song_meta.artist.set( [ artist ] )
 
-            # put both into Collection
+            # put song into artist collection
+            if artist:
+                artist.song_set.add(song)
+                artist.save()
+
+            # put both into album collection
             if album:
-                album.songs.add(song)
+                album.song_set.add(song)
                 if artist:
-                    album.artists.add(artist)
-            album.save()
+                    album.related_collections.add(artist)
+                album.save()
 
             self.stdout.write(self.style.SUCCESS('Successfully imported file "%s"' % path))

@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 {% load tags_songs %}
-{% load tags_artists %}
+{% load tags_collections %}
 {% load l10n %}
 
 {% block title %}
@@ -15,7 +15,13 @@ Song - {{ object.name }}{% if perms.songs.change_song %} [<a href="{% url 'admin
   <div class="detail-infobox">
     <dl>
       <dt>Name</dt><dd><b>{{ object.name }}</b></dd>
-      <dt>Artists</dt><dd>{% for artist in object.artist.all %}{% artist artist.pk %}{% endfor %}</dd>
+      {% regroup object.collections.all by collection_type as collection_list %}
+      {% for collection in collection_list %}
+        <dt>{{ collection.grouper }}</dt>
+        <dd>
+          {% for c in collection.list %}{% collection c.pk %} {% endfor %}
+        </dd>
+      {% endfor %}
       <dt>Duration</dt><dd>{% duration object.song_file.duration %}</dd>
       <dt>Release Date</dt><dd>{{ object.release_date|localize }}</dd>
       <dt>Filesize</dt><dd>{{ object.song_file.filepath.size|filesizeformat }}</dd>

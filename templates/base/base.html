@@ -1,6 +1,6 @@
 {% load static %}
 {% load tags_user_profiles %}
-{% load tags_artists %}
+{% load tags_collections %}
 {% load tags_songs %}
 <!DOCTYPE html>
 <html lang="en">
@@ -21,14 +21,10 @@
             <li class="home"><a href="{% url 'index' %}">Home</a>
             <li class="song"><a href="{% url 'songs:song-list' %}">Songs</a>
 {% if perms.songs.view_songmeta %}<ul><li><a href="{% url 'songs:songmeta-list' %}">Pending Metadata</a></ul>{% endif %}
-            <li class="artist"><a href="{% url 'artists:artist-list' %}">Artists</a>
-{% if perms.artists.view_artistmeta %}<ul><li><a href="{% url 'artists:artistmeta-list' %}">Pending Metadata</a></ul>{% endif %}
-            <li class="collection">Collections<ul>
-              {% for collection_type in collection_types %}
+            {% for collection_type in collection_types %}
               <li class="collection-{{ collection_type.id }}"><a href="{% url 'collections:collection-list' collection_type.id %}">{{ collection_type.name }}</a>
 {% if perms.collections.view_collectionmeta %}<ul><li><a href="{% url 'collections:collectionmeta-list' collection_type.id %}">Pending Metadata</a></ul>{% endif %}
-              {% endfor %}
-              </ul>
+            {% endfor %}
             </li>
 
             <li>&nbsp;
@@ -97,7 +93,7 @@
           <p>not logged in (<a href="{% url 'account_login' %}">login</a>)
           {% endif %}
           <ul>
-          <li><a href="{% url 'artists:artist-list' %}">artists</a>
+          <li><a href="{% url 'collections:collection-list' 'artist' %}">artists</a>
           <li><a href="{% url 'songs:song-list' %}">songs</a>
           <li><a href="{% url 'collections:collection-type-list' %}">collections</a>
           <li><a href="{% url 'player:stream-list' %}">streams</a>
@@ -125,7 +121,7 @@
         <div id="nowplaying">
           <h3>Currently Playing</h3>
           {% song now_playing.song.pk 'now-playing-song' %}
-          <br />by <span id="now-playing-artist">{% for artist in now_playing.song.artist.all %}{% artist artist.pk %}{% endfor %}</span>
+          <br />by <span id="now-playing-artist">{% for a in now_playing.song.artists %}{% collection a.pk %}{% endfor %}</span>
           <br />
           Requested By: {% user now_playing.user.username 'now-playing-user' %}
           <br />
