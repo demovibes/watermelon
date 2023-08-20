@@ -19,7 +19,10 @@ class Service(models.Model):
     service status can be determined quickly.
     """
 
-    name = models.CharField(max_length=191, primary_key=True,
+    id = models.SlugField(max_length=191, primary_key=True,
+        help_text='ID of the backend service')
+
+    name = models.CharField(max_length=255,
         help_text='Name of the backend service to manage')
 
     description = models.CharField(max_length=255, blank=True,
@@ -39,6 +42,9 @@ class Service(models.Model):
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse('backend:service-detail', kwargs={'pk': self.pk})
+
+    class Meta:
+        ordering = [ 'id' ]
 
     def __str__(self):
         return '%s [%s]' % (self.name, self.description)

@@ -14,4 +14,5 @@ class CommandAdminInline(admin.TabularInline):
 # Define a Service admin with file inlines
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'id': ['name']}
     inlines = (CommandAdminInline, FileAdminInline,)

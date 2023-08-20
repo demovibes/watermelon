@@ -5,17 +5,17 @@ from django.db import migrations
 
 def get_initial_services():
     return [
-      { 'name': 'Icecast', 'description': 'Icecast Streamer', 'command': [
-          { 'name': 'status', 'command': 'service icecast status', 'autorun': True },
-          { 'name': 'start', 'command': 'service icecast start' },
-          { 'name': 'stop', 'command': 'service icecast stop' },
+      { 'id': 'icecast', 'name': 'Icecast', 'description': 'Icecast Streamer', 'command': [
+          { 'name': 'status', 'command': 'service icecast2 status', 'autorun': True },
+          { 'name': 'start', 'command': 'service icecast2 start' },
+          { 'name': 'stop', 'command': 'service icecast2 stop' },
         ], 'file': [
-          { 'name': 'Service Config', 'path': '/usr/local/etc/icecast.xml', },
-          { 'name': 'Access Log', 'path': '/var/log/icecast/access.log', 'readonly': True, },
-          { 'name': 'Error Log', 'path': '/var/log/icecast/error.log', 'readonly': True, },
+          { 'name': 'Service Config', 'path': '/etc/icecast2/icecast.xml', },
+          { 'name': 'Access Log', 'path': '/var/log/icecast2/access.log', 'readonly': True, },
+          { 'name': 'Error Log', 'path': '/var/log/icecast2/error.log', 'readonly': True, },
         ]
       },
-      { 'name': 'IceS', 'description': 'Icecast source client', 'pidfile': '/var/run/ices.pid', 'command': [
+      { 'id': 'ices', 'name': 'IceS', 'description': 'Icecast source client', 'pidfile': '/var/run/ices.pid', 'command': [
           { 'name': 'status', 'command': 'kill -0 $PID', 'autorun': True },
           { 'name': 'start', 'command': '/usr/local/bin/ices /usr/local/etc/ices.xml', 'background': True },
           { 'name': 'stop', 'command': 'kill -INT $PID' },
@@ -26,7 +26,7 @@ def get_initial_services():
           { 'name': 'Output Log', 'path': '/var/log/ices/ices.log', 'readonly': True, },
         ]
       },
-      { 'name': 'Background-Transcode', 'description': 'Background transcoding (cache) files to .ogg format', 'pidfile': '/var/run/background-transcode.pid', 'command': [
+      { 'id': 'background-transcode', 'name': 'Background Transcode', 'description': 'Background transcoding (cache) files to .ogg format', 'pidfile': '/var/run/background-transcode.pid', 'command': [
           { 'name': 'status', 'command': 'kill -0 $PID', 'autorun': True },
           { 'name': 'start', 'command': '/home/pi/src/watermelon/contrib/ices/background-transcode.py' },
           { 'name': 'stop', 'command': 'kill -INT $PID' },
